@@ -1,10 +1,14 @@
 package com.pcadvisor.pcadvisorapi.model;
 
-enum StorageType {
+import lombok.Data;
 
+enum StorageType {
+    SSD,
+    HDD
 }
 
-public class Storage {
-
-
+@Data
+public class Storage extends BasePCComponent {
+    private StorageType type;
+    private Integer size; // in GigaBytes
 }
