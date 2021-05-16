@@ -1,0 +1,16 @@
+.back-button {
+  width: 46px;
+  height: 46px;
+  border: 0;
+  background-color: #e2eaf3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+
+  &:hover,
+  &:active,
+  &:focus {
+    background-color: #e2eaf3;
+  }
+}

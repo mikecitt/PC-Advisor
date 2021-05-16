@@ -2,7 +2,11 @@ import { applyMiddleware, combineReducers, createStore } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
-const rootReducer = combineReducers({});
+import { compatibilityReducer } from './compatibility/reducer';
+
+const rootReducer = combineReducers({
+  compatibility: compatibilityReducer
+});
 
 export type RootState = ReturnType<typeof rootReducer>;
 

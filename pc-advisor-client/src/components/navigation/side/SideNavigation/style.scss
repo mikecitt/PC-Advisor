@@ -1,0 +1,16 @@
+@import 'styles/partials/colors';
+
+.side-navigation {
+  &__title {
+    font-weight: bold;
+    font-size: 17px;
+    color: #4c5b70;
+    margin-left: 16%;
+    margin-top: 29px;
+    margin-bottom: 51px;
+  }
+
+  &__logo {
+    color: inherit;
+  }
+}

@@ -1,0 +1,41 @@
+@import 'styles/partials/colors';
+@import 'styles/partials/variables';
+
+.cpu-area {
+  background-color: white;
+  max-width: 425px;
+  padding-top: 20px;
+  padding-bottom: 25px;
+  padding-right: 20px;
+  padding-left: 20px;
+
+  &__title {
+    color: $brand-color;
+    font-weight: bold;
+    font-size: 24px;
+  }
+
+  &__subtitle {
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    color: $brand-secondary;
+    max-width: 350px;
+    letter-spacing: 0.02em;
+    margin-top: 28px;
+    margin-bottom: 34px;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: -5px;
+  }
+
+  &__image {
+    width: 150px;
+    height: 150px;
+  }
+}
