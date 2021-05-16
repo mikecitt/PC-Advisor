@@ -2,11 +2,11 @@ package com.pcadvisor.pcadvisorapi.model;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
 public class PCBuild {
-
     private CPU cpu;
     private GPU gpu;
     private Motherboard motherboard;
