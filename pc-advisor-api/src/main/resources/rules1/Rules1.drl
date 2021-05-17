@@ -1,0 +1,10 @@
+package rules1;
+
+import com.pcadvisor.pcadvisorapi.dto.SurveyDTO;
+
+rule "CPU and MB compatible"
+    when
+        survey: SurveyDTO($brand : cpuName.split(" ")[0])
+    then
+        survey.setTestField($brand);
+    end

@@ -13,4 +13,9 @@ public class PCBuild {
     private PowerSupply powerSupply;
     private RAM ram;
     private List<Storage> storage;
+
+    public PCBuild(CPU cpu, Motherboard motherboard) {
+        this.cpu = cpu;
+        this.motherboard = motherboard;
+    }
 }
