@@ -1,11 +1,15 @@
 package com.pcadvisor.pcadvisorapi.model;
 
-import lombok.Data;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.util.Collection;
 import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.validation.constraints.NotNull;
+
+import lombok.Data;
 
 enum CPUBrand {
     AMD,

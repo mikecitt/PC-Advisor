@@ -1,9 +1,9 @@
 package com.pcadvisor.pcadvisorapi.model;
 
-import lombok.Data;
-
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotNull;
+
+import lombok.Data;
 
 @MappedSuperclass
 @Data

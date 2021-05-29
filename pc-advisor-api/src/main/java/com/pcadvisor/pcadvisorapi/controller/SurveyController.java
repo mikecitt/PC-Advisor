@@ -1,12 +1,10 @@
 package com.pcadvisor.pcadvisorapi.controller;
 
 import com.pcadvisor.pcadvisorapi.dto.SurveyDTO;
-import com.pcadvisor.pcadvisorapi.model.CPU;
-import com.pcadvisor.pcadvisorapi.model.Motherboard;
-import com.pcadvisor.pcadvisorapi.model.PCBuild;
 import com.pcadvisor.pcadvisorapi.repository.CPURepository;
 import com.pcadvisor.pcadvisorapi.repository.MotherboardRepository;
 import com.pcadvisor.pcadvisorapi.service.SurveyService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
