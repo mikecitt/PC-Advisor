@@ -26,6 +26,8 @@ public class CPU extends BasePCComponentPowered {
     private Integer cores;
     @NotNull
     private Float frequency;
+    @NotNull
+    private Integer score; // 3DMark Physics Score 
 
     @Column
     @ElementCollection(targetClass = Chipset.class)

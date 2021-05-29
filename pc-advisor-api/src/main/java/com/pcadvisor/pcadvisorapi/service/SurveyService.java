@@ -15,6 +15,7 @@ public class SurveyService {
     public SurveyDTO getCompatibility(SurveyDTO surveyDTO) {
         KieSession session = kieContainer.newKieSession("rulesSession");
         session.insert(surveyDTO);
+        session.insert("test");
         session.fireAllRules();
         session.dispose();
         return surveyDTO;
