@@ -1,6 +1,9 @@
 package com.pcadvisor.pcadvisorapi.controller;
 
-import com.pcadvisor.pcadvisorapi.dto.SurveyDTO;
+import java.util.List;
+
+import com.pcadvisor.pcadvisorapi.dto.PriorityDTO;
+import com.pcadvisor.pcadvisorapi.model.CPU;
 import com.pcadvisor.pcadvisorapi.repository.CPURepository;
 import com.pcadvisor.pcadvisorapi.repository.MotherboardRepository;
 import com.pcadvisor.pcadvisorapi.service.SurveyService;
@@ -27,15 +30,15 @@ public class SurveyController {
     private SurveyService surveyService;
 
     @PostMapping
-    public ResponseEntity<SurveyDTO> submitSurvey(@RequestBody SurveyDTO surveyDTO) {
+    public ResponseEntity<List<CPU>> submitSurvey(@RequestBody PriorityDTO priorityDTO) {
         //CPU cpu = cpuRepository.findCPUByDisplayName(surveyDTO.getCpuName());
         //Motherboard motherboard = motherboardRepository.findMotherboardByDisplayName(surveyDTO.getMotherboardName());
 
         //System.out.println(surveyDTO.getCpuName());
         //System.out.println(surveyDTO.getMotherboardName());
 
-        surveyDTO = surveyService.getCompatibility(surveyDTO);
+        List<CPU> cpus = surveyService.getCompatibility(priorityDTO);
 
-        return new ResponseEntity<SurveyDTO>(surveyDTO, HttpStatus.OK);
+        return new ResponseEntity<>(cpus, HttpStatus.OK);
     }
 }

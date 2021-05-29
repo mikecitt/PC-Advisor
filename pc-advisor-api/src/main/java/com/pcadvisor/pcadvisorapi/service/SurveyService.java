@@ -1,6 +1,10 @@
 package com.pcadvisor.pcadvisorapi.service;
 
-import com.pcadvisor.pcadvisorapi.dto.SurveyDTO;
+import java.util.List;
+
+import com.pcadvisor.pcadvisorapi.dto.PriorityDTO;
+import com.pcadvisor.pcadvisorapi.model.CPU;
+import com.pcadvisor.pcadvisorapi.repository.CPURepository;
 
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
@@ -12,12 +16,17 @@ public class SurveyService {
     @Autowired
     private KieContainer kieContainer;
 
-    public SurveyDTO getCompatibility(SurveyDTO surveyDTO) {
+    @Autowired
+    private CPURepository cpuRepository;
+
+    public List<CPU> getCompatibility(PriorityDTO priorityDTO) {
         KieSession session = kieContainer.newKieSession("rulesSession");
-        session.insert(surveyDTO);
-        session.insert("test");
+        List<CPU> cpus = cpuRepository.findAll();
+        session.insert(priorityDTO);
+        for(CPU cpu : cpus)
+            session.insert(cpu);
         session.fireAllRules();
         session.dispose();
-        return surveyDTO;
+        return cpus;
     }
 }

@@ -14,7 +14,9 @@ public enum Chipset {
     H110,
     B250,
     H270,
+    H310,
     Z270,
-    B360
+    B360,
+    Z390
     // itd...
 }

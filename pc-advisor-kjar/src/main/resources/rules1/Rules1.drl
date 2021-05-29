@@ -1,11 +1,13 @@
 package rules1;
 
-import com.pcadvisor.pcadvisorapi.dto.SurveyDTO;
+import com.pcadvisor.pcadvisorapi.dto.PriorityDTO;
+import com.pcadvisor.pcadvisorapi.model.CPU;
 
-rule "CPU and MB compatible"
+rule "test"
     when
-        survey: SurveyDTO($brand : cpuName.split(" ")[0])
-        text: String($text : this)
+        priorityDTO: PriorityDTO($cpuPriority: cpuPriority)
+        cpu: CPU(score > ($cpuPriority * 9000 / 10))
     then
-        survey.setTestField($brand + text);
+        System.out.println(cpu.getDisplayName());
+        cpu = null;
     end

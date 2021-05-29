@@ -11,6 +11,7 @@ import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 
+
 enum CPUBrand {
     AMD,
     INTEL
