@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class CompatibilityResponseDTO {
 
-  private boolean status;
+  private boolean success;
 }

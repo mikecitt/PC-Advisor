@@ -11,5 +11,5 @@ rule "CheckCompatibilityRule"
         $compatibility: CompatibilityResponseDTO()
     then
         System.out.println("Compatible");
-        $compatibility.setStatus(true);
+        $compatibility.setSuccess(true);
     end

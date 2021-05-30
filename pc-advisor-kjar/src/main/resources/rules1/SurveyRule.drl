@@ -1,0 +1,68 @@
+package rules1;
+
+import com.pcadvisor.pcadvisorapi.model.ComputerProgram;
+import com.pcadvisor.pcadvisorapi.dto.UsageAreasDTO;
+import com.pcadvisor.pcadvisorapi.dto.PriorityDTO;
+import com.pcadvisor.pcadvisorapi.dto.ComputerProgramsDTO;
+
+rule "UsageArea"
+    when
+        $computerProgram: ComputerProgram($usageArea: usageArea)
+        usageArea: UsageAreasDTO(usageAreas contains $usageArea)
+        $computerProgramsDTO: ComputerProgramsDTO()
+    then
+        $computerProgramsDTO.getComputerPrograms().add($computerProgram);
+    end
+
+rule "Gaming"
+no-loop true
+    when
+        $computerProgram: ComputerProgram(usageArea == UsageArea.GAMING)
+        $priorityDTO: PriorityDTO(gpuPriority < 5)
+    then
+        modify($priorityDTO) { setGpuPriority(5) };
+        modify($priorityDTO) { setRamPriority(4) };
+        modify($priorityDTO) { setCpuPriority(3) };
+    end
+
+rule "Programming"
+no-loop true
+    when
+        $computerProgram: ComputerProgram(usageArea == UsageArea.PROGRAMMING)
+        $priorityDTO: PriorityDTO(cpuPriority < 5)
+    then
+        modify($priorityDTO) { setGpuPriority(1) };
+        modify($priorityDTO) { setRamPriority(4) };
+        modify($priorityDTO) { setCpuPriority(5) };
+    end
+
+rule "Modeling 3d"
+no-loop true
+    when
+        $computerProgram: ComputerProgram(usageArea == UsageArea.MODELING_3D)
+        $priorityDTO: PriorityDTO(gpuPriority < 6)
+    then
+        modify($priorityDTO) { setGpuPriority(4) };
+        modify($priorityDTO) { setRamPriority(5) };
+        modify($priorityDTO) { setCpuPriority(6) };
+    end
+
+rule "Graphic design"
+no-loop true
+    when
+        $computerProgram: ComputerProgram(usageArea == UsageArea.GRAPHIC_DESIGN)
+        $priorityDTO: PriorityDTO(gpuPriority < 6)
+    then
+        modify($priorityDTO) { setGpuPriority(6) };
+        modify($priorityDTO) { setRamPriority(5) };
+        modify($priorityDTO) { setCpuPriority(4) };
+    end
+
+rule "Office"
+no-loop true
+    when
+        $computerProgram: ComputerProgram(usageArea == UsageArea.OFFICE)
+        $priorityDTO: PriorityDTO(ramPriority < 3)
+    then
+        modify($priorityDTO) { setRamPriority(3) };
+    end
