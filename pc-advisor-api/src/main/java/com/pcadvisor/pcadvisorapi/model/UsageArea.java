@@ -1,6 +1,6 @@
-package com.pcadvisor.pcadvisorapi.dto;
+package com.pcadvisor.pcadvisorapi.model;
 
-public enum UsageAreaDTO {
+public enum UsageArea {
     GAMING,
     PROGRAMMING,
     MODELING_3D,

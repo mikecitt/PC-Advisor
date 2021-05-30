@@ -9,11 +9,7 @@ import javax.validation.constraints.Size;
 
 @MappedSuperclass
 @Data
-public class BasePCComponent {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class BasePCComponent extends BaseEntity {
     @NotBlank
     @Size(min = 3, max = 64)
     @Column(nullable = false)

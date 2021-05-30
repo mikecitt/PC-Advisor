@@ -10,14 +10,14 @@ import javax.persistence.Enumerated;
 import javax.validation.constraints.NotNull;
 
 import lombok.Data;
-
+import lombok.EqualsAndHashCode;
 
 enum CPUBrand {
-    AMD,
-    INTEL
+    AMD, INTEL
 }
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 @Entity
 public class CPU extends BasePCComponentPowered {
     @Enumerated(EnumType.STRING)
@@ -28,7 +28,7 @@ public class CPU extends BasePCComponentPowered {
     @NotNull
     private Float frequency;
     @NotNull
-    private Integer score; // 3DMark Physics Score 
+    private Integer score; // 3DMark Physics Score
 
     @Column
     @ElementCollection(targetClass = Chipset.class)
