@@ -1,13 +1,28 @@
 package rules1;
 
 import com.pcadvisor.pcadvisorapi.dto.PriorityDTO;
+import com.pcadvisor.pcadvisorapi.dto.AffinitiesDTO;
 import com.pcadvisor.pcadvisorapi.model.CPU;
+import com.pcadvisor.pcadvisorapi.model.GPU;
+import com.pcadvisor.pcadvisorapi.drools.model.CpusGpus;
 
-rule "test"
+rule "CPU score pass priority"
+lock-on-active true
     when
         priorityDTO: PriorityDTO($cpuPriority: cpuPriority)
-        cpu: CPU(score > ($cpuPriority * 9000 / 10))
+        $cpu: CPU(score > ($cpuPriority * 9000 / 10))
+        $cpusgpus: CpusGpus()
     then
-        System.out.println(cpu.getDisplayName());
-        cpu = null;
+        $cpusgpus.addCpu($cpu);
+    end
+
+rule "GPU score pass priority"
+lock-on-active true
+    when
+        priorityDTO: PriorityDTO($gpuPriority: gpuPriority)
+        $gpu: GPU(score > ($gpuPriority * 20000 / 10))
+        $cpusgpus: CpusGpus()
+    then
+        $cpusgpus.addGpu($gpu);
+        insert($cpusgpus);
     end
