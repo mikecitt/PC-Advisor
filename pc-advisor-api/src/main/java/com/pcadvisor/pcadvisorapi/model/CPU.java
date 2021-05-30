@@ -10,15 +10,15 @@ import javax.persistence.Enumerated;
 import javax.validation.constraints.NotNull;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 enum CPUBrand {
     AMD, INTEL
 }
 
 @Data
-@EqualsAndHashCode(callSuper = false)
 @Entity
+@ToString
 public class CPU extends BasePCComponentPowered {
     @Enumerated(EnumType.STRING)
     @NotNull
@@ -34,4 +34,9 @@ public class CPU extends BasePCComponentPowered {
     @ElementCollection(targetClass = Chipset.class)
     @Enumerated(EnumType.STRING)
     private List<Chipset> compatibleChipsets;
+
+    @Override
+    public String toString() {
+        return getDisplayName();
+    }
 }

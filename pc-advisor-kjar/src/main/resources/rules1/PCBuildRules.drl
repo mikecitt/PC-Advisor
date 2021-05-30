@@ -1,0 +1,69 @@
+package rules1;
+
+import com.pcadvisor.pcadvisorapi.dto.PriorityDTO;
+import com.pcadvisor.pcadvisorapi.dto.AffinitiesDTO;
+import com.pcadvisor.pcadvisorapi.model.CPU;
+import com.pcadvisor.pcadvisorapi.model.GPU;
+import com.pcadvisor.pcadvisorapi.model.RAM;
+import com.pcadvisor.pcadvisorapi.model.Storage;
+import com.pcadvisor.pcadvisorapi.model.PowerSupply;
+import com.pcadvisor.pcadvisorapi.model.PCBuild;
+import com.pcadvisor.pcadvisorapi.drools.model.CpusGpus;
+import com.pcadvisor.pcadvisorapi.drools.model.CpuGpuPair;
+import com.pcadvisor.pcadvisorapi.model.Chipset;
+
+rule "CPU-GPU choose"
+agenda-group "cpu-gpu-ram"
+no-loop true
+    when
+        priorityDTO: PriorityDTO($cpuPriority: cpuPriority, $gpuPriority: gpuPriority)
+        $cpu: CPU(score > ($cpuPriority * 900) && score < (($cpuPriority+2) * 900))
+        $gpu: GPU(score > ($gpuPriority * 2000) && score < (($gpuPriority+2) * 2000))
+        //$cpugpupair: CpuGpuPair($cpu:cpu, $gpu:gpu)
+        //affinities: AffinitiesDTO(brandPref == null || brandPref == $cpu.)
+    then
+        insert(new PCBuild($cpu, $gpu));
+        //System.out.println($cpu.getDisplayName() + " + " + $gpu.getDisplayName());
+    end
+
+rule "RAM choose 1-4"
+agenda-group "cpu-gpu-ram"
+no-loop true
+    when
+        priorityDTO: PriorityDTO(ramPriority < 5)
+        pcBuild: PCBuild($cpu: cpu)
+        $ram: RAM(size == 8)
+    then
+        pcBuild.setRam($ram);
+    end
+
+rule "RAM choose 5-9"
+agenda-group "cpu-gpu-ram"
+no-loop true
+    when
+        priorityDTO: PriorityDTO(ramPriority >= 5 && ramPriority < 10)
+        pcBuild: PCBuild()
+        $ram: RAM(size == 16)
+    then
+        pcBuild.setRam($ram);
+    end
+
+rule "RAM choose 10"
+agenda-group "cpu-gpu-ram"
+no-loop true
+    when
+        priorityDTO: PriorityDTO(ramPriority >= 10)
+        pcBuild: PCBuild()
+        $ram: RAM(size == 32)
+    then
+        pcBuild.setRam($ram);
+    end
+
+rule "final"
+agenda-group "finish"
+no-loop true
+    when
+        pcBuild: PCBuild()
+    then
+        System.out.println(pcBuild);
+    end

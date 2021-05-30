@@ -1,11 +1,9 @@
 package com.pcadvisor.pcadvisorapi.service;
 
-import com.pcadvisor.pcadvisorapi.drools.model.CpusGpus;
+import com.pcadvisor.pcadvisorapi.drools.model.CpuGpuPair;
+import com.pcadvisor.pcadvisorapi.dto.AffinitiesDTO;
 import com.pcadvisor.pcadvisorapi.dto.PriorityDTO;
-import com.pcadvisor.pcadvisorapi.model.CPU;
-import com.pcadvisor.pcadvisorapi.model.GPU;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +18,16 @@ public class PCBuildServiceUnitTests {
 
     @Test
     public void testGetCpusGpus() {
-        PriorityDTO priorityDTO = new PriorityDTO(5, 5, 4);
-        CpusGpus cpusGpus = pcBuildService.getCpuGpuPairs(priorityDTO);
-        for(CPU cpu: cpusGpus.getCpus()) {
+        PriorityDTO priorityDTO = new PriorityDTO(5, 5, 5);
+        AffinitiesDTO affinitiesDTO = new AffinitiesDTO("AMD", 450, 1000);
+        //CpusGpus cpusGpus = pcBuildService.getCpuGpuPairs(priorityDTO);
+        pcBuildService.getCpuGpuPairs(priorityDTO, affinitiesDTO);
+        CpuGpuPair pair = new CpuGpuPair();
+        /*for(CPU cpu: cpusGpus.getCpus()) {
             Assert.assertTrue(cpu.getScore() > (priorityDTO.getCpuPriority() * 9000 / 10));
         }
         for(GPU gpu: cpusGpus.getGpus()) {
             Assert.assertTrue(gpu.getScore() > (priorityDTO.getGpuPriority() * 20000 / 10));
-        }
+        }*/
     }
 }

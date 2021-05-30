@@ -21,4 +21,9 @@ public class GPU extends BasePCComponentPowered {
 
     @NotNull
     private Integer score; // 3DMark Graphics Score
+
+    @Override
+    public String toString() {
+        return getDisplayName();
+    }
 }

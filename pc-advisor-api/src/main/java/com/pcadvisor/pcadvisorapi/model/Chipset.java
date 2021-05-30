@@ -1,5 +1,8 @@
 package com.pcadvisor.pcadvisorapi.model;
 
+import lombok.ToString;
+
+@ToString
 public enum Chipset {
     // AMD
     A320,

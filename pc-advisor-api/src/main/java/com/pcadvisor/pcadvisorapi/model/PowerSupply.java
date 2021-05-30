@@ -10,4 +10,9 @@ import lombok.Data;
 public class PowerSupply extends BasePCComponent {
     @NotNull
     private Integer wattage; // in Watts
+
+    @Override
+    public String toString() {
+        return getDisplayName();
+    }
 }

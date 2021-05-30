@@ -1,11 +1,11 @@
 package com.pcadvisor.pcadvisorapi.model;
 
-import lombok.Data;
-
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.NotNull;
+
+import lombok.Data;
 
 enum StorageType {
     SSD,
@@ -20,4 +20,9 @@ public class Storage extends BasePCComponent {
     private StorageType type;
     @NotNull
     private Integer size; // in GigaBytes
+
+    @Override
+    public String toString() {
+        return getDisplayName();
+    }
 }

@@ -10,6 +10,10 @@ public class CpuGpuPair {
     private CPU cpu;
     private GPU gpu;
 
+    public CpuGpuPair() {
+        
+    }
+
     public CpuGpuPair(CPU cpu, GPU gpu) {
         this.cpu = cpu;
         this.gpu = gpu;
