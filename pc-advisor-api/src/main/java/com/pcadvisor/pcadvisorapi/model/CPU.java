@@ -12,10 +12,6 @@ import javax.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.ToString;
 
-enum CPUBrand {
-    AMD, INTEL
-}
-
 @Data
 @Entity
 @ToString

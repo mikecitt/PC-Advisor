@@ -5,65 +5,93 @@ import com.pcadvisor.pcadvisorapi.dto.AffinitiesDTO;
 import com.pcadvisor.pcadvisorapi.model.CPU;
 import com.pcadvisor.pcadvisorapi.model.GPU;
 import com.pcadvisor.pcadvisorapi.model.RAM;
+import com.pcadvisor.pcadvisorapi.model.Chipset;
+import com.pcadvisor.pcadvisorapi.model.RamType;
+import com.pcadvisor.pcadvisorapi.model.CPUBrand;
 import com.pcadvisor.pcadvisorapi.model.Storage;
 import com.pcadvisor.pcadvisorapi.model.PowerSupply;
 import com.pcadvisor.pcadvisorapi.model.PCBuild;
 import com.pcadvisor.pcadvisorapi.drools.model.CpusGpus;
 import com.pcadvisor.pcadvisorapi.drools.model.CpuGpuPair;
-import com.pcadvisor.pcadvisorapi.model.Chipset;
 
 rule "CPU-GPU choose"
 agenda-group "cpu-gpu-ram"
 no-loop true
+salience 100
     when
         priorityDTO: PriorityDTO($cpuPriority: cpuPriority, $gpuPriority: gpuPriority)
+        $mb: Motherboard()
         $cpu: CPU(score > ($cpuPriority * 900) && score < (($cpuPriority+2) * 900))
         $gpu: GPU(score > ($gpuPriority * 2000) && score < (($gpuPriority+2) * 2000))
-        //$cpugpupair: CpuGpuPair($cpu:cpu, $gpu:gpu)
-        //affinities: AffinitiesDTO(brandPref == null || brandPref == $cpu.)
+        affinities: AffinitiesDTO()
+        //affinities: AffinitiesDTO(brandPref == null || brandPref == $cpu.getCpuBrand())
     then
-        insert(new PCBuild($cpu, $gpu));
-        //System.out.println($cpu.getDisplayName() + " + " + $gpu.getDisplayName());
+        //System.out.println($cpu.getDisplayName() + " + " + $mb.getDisplayName() + " + " + $gpu.getDisplayName());
+        insert(new PCBuild($cpu, $mb, $gpu));
     end
 
-rule "RAM choose 1-4"
+rule "RAM choose"
 agenda-group "cpu-gpu-ram"
 no-loop true
+salience 100
     when
-        priorityDTO: PriorityDTO(ramPriority < 5)
-        pcBuild: PCBuild($cpu: cpu)
-        $ram: RAM(size == 8)
+        priorityDTO: PriorityDTO($ramPriority: ramPriority)
+        $pcBuild: PCBuild($cpu: cpu)
+        $ram: RAM(size >= ($ramPriority * 8 / 5))
     then
-        pcBuild.setRam($ram);
+        //PCBuild newBuild = new PCBuild($pcBuild);
+        $pcBuild.setRam($ram);
+        update($pcBuild);
+        //$pcBuild.setRam($ram);
+        //update($pcBuild);
+        //insert(newBuild);
     end
 
-rule "RAM choose 5-9"
+rule "Power Supply choose"
 agenda-group "cpu-gpu-ram"
 no-loop true
+salience 100
     when
-        priorityDTO: PriorityDTO(ramPriority >= 5 && ramPriority < 10)
-        pcBuild: PCBuild()
-        $ram: RAM(size == 16)
+        $pcBuild: PCBuild($powerUsage: getPowerUsage())
+        $psu: PowerSupply(wattage == (($powerUsage + 300) - ($powerUsage + 300)%100))
     then
-        pcBuild.setRam($ram);
+        $pcBuild.setPowerSupply($psu);
+        update($pcBuild);
     end
 
-rule "RAM choose 10"
+rule "Check Budget"
 agenda-group "cpu-gpu-ram"
 no-loop true
+salience 100
     when
-        priorityDTO: PriorityDTO(ramPriority >= 10)
-        pcBuild: PCBuild()
-        $ram: RAM(size == 32)
+        pcBuild: PCBuild($price: getPrice())
+        affinities: AffinitiesDTO(budget < $price)
     then
-        pcBuild.setRam($ram);
+        delete(pcBuild);
+    end
+
+rule "no builds in memory"
+agenda-group "cpu-gpu-ram"
+no-loop true
+salience 50
+    when
+        not PCBuild()
+        $affinities: AffinitiesDTO()
+    then
+        System.out.println("Povecavam budzet za 100e");
+        $affinities.setBudget($affinities.getBudget() + 100);
+        update($affinities);
     end
 
 rule "final"
 agenda-group "finish"
 no-loop true
     when
-        pcBuild: PCBuild()
+        $pcBuild: PCBuild(ram == null)
     then
-        System.out.println(pcBuild);
+        delete($pcBuild);
+        //System.out.println(pcBuild);
     end
+
+
+

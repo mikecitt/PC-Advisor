@@ -7,11 +7,6 @@ import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 
-enum RamType {
-    SINGLE,
-    KIT
-}
-
 @Data
 @Entity
 public class RAM extends BasePCComponent {

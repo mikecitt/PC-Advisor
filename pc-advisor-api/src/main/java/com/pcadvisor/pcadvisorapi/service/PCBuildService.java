@@ -8,9 +8,13 @@ import com.pcadvisor.pcadvisorapi.dto.AffinitiesDTO;
 import com.pcadvisor.pcadvisorapi.dto.PriorityDTO;
 import com.pcadvisor.pcadvisorapi.model.CPU;
 import com.pcadvisor.pcadvisorapi.model.GPU;
+import com.pcadvisor.pcadvisorapi.model.Motherboard;
+import com.pcadvisor.pcadvisorapi.model.PowerSupply;
 import com.pcadvisor.pcadvisorapi.model.RAM;
 import com.pcadvisor.pcadvisorapi.repository.CPURepository;
 import com.pcadvisor.pcadvisorapi.repository.GPURepository;
+import com.pcadvisor.pcadvisorapi.repository.MotherboardRepository;
+import com.pcadvisor.pcadvisorapi.repository.PowerSupplyRepository;
 import com.pcadvisor.pcadvisorapi.repository.RAMRepository;
 
 import org.kie.api.runtime.KieContainer;
@@ -32,11 +36,19 @@ public class PCBuildService {
     @Autowired
     private RAMRepository ramRepository;
 
+    @Autowired
+    private MotherboardRepository motherboardRepository;
+
+    @Autowired
+    private PowerSupplyRepository powerSupplyRepository;
+
     public CpusGpus getCpuGpuPairs(PriorityDTO priorityDTO, AffinitiesDTO affinitiesDTO) {
         KieSession session = kieContainer.newKieSession("rulesSession");
         List<CPU> cpus = cpuRepository.findAll();
         List<GPU> gpus = gpuRepository.findAll();
         List<RAM> rams = ramRepository.findAll();
+        List<Motherboard> motherboards = motherboardRepository.findAll();
+        List<PowerSupply> powerSupplies = powerSupplyRepository.findAll();
         session.insert(priorityDTO);
         session.insert(affinitiesDTO);
         for(CPU cpu : cpus)
@@ -45,6 +57,10 @@ public class PCBuildService {
             session.insert(gpu);
         for(RAM ram: rams)
             session.insert(ram);
+        for(Motherboard motherboard: motherboards)
+            session.insert(motherboard);
+        for(PowerSupply powerSupply: powerSupplies)
+            session.insert(powerSupply);
         CpuGpuPair pair = new CpuGpuPair();
         CpusGpus cpusGpus = new CpusGpus();
         //session.insert(pair);

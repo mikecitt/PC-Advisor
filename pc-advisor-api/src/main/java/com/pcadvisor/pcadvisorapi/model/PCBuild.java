@@ -13,13 +13,9 @@ public class PCBuild {
     private RAM ram;
     private List<Storage> storage;
 
-    public PCBuild(CPU cpu, Motherboard motherboard) {
+    public PCBuild(CPU cpu, Motherboard motherboard, GPU gpu) {
         this.cpu = cpu;
         this.motherboard = motherboard;
-    }
-
-    public PCBuild(CPU cpu, GPU gpu) {
-        this.cpu = cpu;
         this.gpu = gpu;
     }
 
@@ -27,15 +23,28 @@ public class PCBuild {
         return (cpu == null ? 0 : cpu.getPrice()) + (gpu == null ? 0 : gpu.getPrice()) + (motherboard == null ? 0 : motherboard.getPrice()) + (powerSupply == null ? 0 : powerSupply.getPrice()) + (ram == null ? 0 : ram.getPrice());
     } 
 
+    public Integer getPowerUsage() {
+        return (cpu == null ? 0 : cpu.getTDP()) + (gpu == null ? 0 : gpu.getTDP());
+    }
+
     @Override
     public String toString() {
-        return "{" +
-            " cpu='" + getCpu() + "'" +
-            ", gpu='" + getGpu() + "'" +
-            ", motherboard='" + getMotherboard() + "'" +
-            ", powerSupply='" + getPowerSupply() + "'" +
-            ", ram='" + getRam() + "'" +
-            ", storage='" + getStorage() + "'" +
-            ", price='" + getPrice() +"'}";
+        return "****************\n" +
+            "CPU: " + getCpu() + "\n" +
+            "GPU: " + getGpu() + "\n" +
+            " MB: " + getMotherboard() + "\n" +
+            "PSU: " + getPowerSupply() + "\n" +
+            "RAM: " + getRam() + "\n" +
+            "SSD: " + getStorage() + "\n" +
+            "Total price: " + getPrice();
+    }
+
+    public PCBuild(PCBuild pcBuild) {
+        this.cpu = pcBuild.getCpu();
+        this.gpu = pcBuild.getGpu();
+        this.motherboard = pcBuild.getMotherboard();
+        this.powerSupply = pcBuild.getPowerSupply();
+        this.ram = pcBuild.getRam();
+        this.storage = pcBuild.getStorage();
     }
 }
