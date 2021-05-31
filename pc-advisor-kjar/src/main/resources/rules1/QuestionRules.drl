@@ -1,0 +1,93 @@
+package com.pcadvisor.pcadvisorapi;
+import com.pcadvisor.pcadvisorapi.drools.model.Question;
+import com.pcadvisor.pcadvisorapi.drools.model.QuestionScore;
+
+rule "Usage Area Question_10"
+lock-on-active true
+when
+    question: Question(id == 10, $usageArea: usageArea, $score: score)
+    $scores: QuestionScore()
+then
+    modify ($scores) { getScores().put($usageArea, $score) };
+end
+
+rule "Usage Area Question_9"
+lock-on-active true
+when
+    question: Question(id == 9, $usageArea: usageArea, $score: score)
+    $scores: QuestionScore()
+then
+    modify ($scores) { getScores().put($usageArea, $score) };
+end
+
+rule "Usage Area Question_8"
+lock-on-active true
+when
+    question: Question(id == 8, $usageArea: usageArea, $score: score)
+    $scores: QuestionScore()
+then
+    modify ($scores) { getScores().put($usageArea, $score) };
+end
+
+rule "Usage Area Question_7"
+lock-on-active true
+when
+    question: Question(id == 7, $usageArea: usageArea, $score: score)
+    $scores: QuestionScore()
+then
+    modify ($scores) { getScores().put($usageArea, $score) };
+end
+
+rule "Usage Area Question_6"
+lock-on-active true
+when
+    question: Question(id == 6, $usageArea: usageArea, $score: score)
+    $scores: QuestionScore()
+then
+    modify ($scores) { getScores().put($usageArea, $score) };
+end
+
+rule "Usage Area Question_5"
+lock-on-active true
+when
+    question: Question(id == 5, $usageArea: usageArea, $score: score)
+    $scores: QuestionScore()
+then
+    modify ($scores) { getScores().put($usageArea, $score) };
+end
+
+rule "Usage Area Question_4"
+lock-on-active true
+when
+    question: Question(id == 4, $usageArea: usageArea, $score: score)
+    $scores: QuestionScore()
+then
+    modify ($scores) { getScores().put($usageArea, $score) };
+end
+
+rule "Usage Area Question_3"
+lock-on-active true
+when
+    question: Question(id == 3, $usageArea: usageArea, $score: score)
+    $scores: QuestionScore()
+then
+    modify ($scores) { getScores().put($usageArea, $score) };
+end
+
+rule "Usage Area Question_2"
+lock-on-active true
+when
+    question: Question(id == 2, $usageArea: usageArea, $score: score)
+    $scores: QuestionScore()
+then
+    modify ($scores) { getScores().put($usageArea, $score) };
+end
+
+rule "Usage Area Question_1"
+lock-on-active true
+when
+    question: Question(id == 1, $usageArea: usageArea, $score: score)
+    $scores: QuestionScore()
+then
+    modify ($scores) { getScores().put($usageArea, $score) };
+end

@@ -1,0 +1,21 @@
+template header
+id
+
+package com.pcadvisor.pcadvisorapi;
+
+import com.pcadvisor.pcadvisorapi.drools.model.Question;
+import com.pcadvisor.pcadvisorapi.drools.model.QuestionScore;
+
+template "question-rules"
+
+rule "Usage Area Question_@{id}"
+lock-on-active true
+when
+    question: Question(id == @{id}, $usageArea: usageArea, $score: score)
+    $scores: QuestionScore()
+then
+    modify ($scores) { getScores().put($usageArea, $score) };
+end
+
+end template
+

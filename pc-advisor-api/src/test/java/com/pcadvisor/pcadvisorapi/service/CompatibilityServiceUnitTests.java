@@ -1,5 +1,7 @@
 package com.pcadvisor.pcadvisorapi.service;
 
+import javax.transaction.Transactional;
+
 import com.pcadvisor.pcadvisorapi.dto.request.CompatibilityRequestDTO;
 import com.pcadvisor.pcadvisorapi.dto.response.CompatibilityResponseDTO;
 
@@ -18,6 +20,7 @@ public class CompatibilityServiceUnitTests {
   private CompatibilityService compatibilityService;
 
   @Test
+  @Transactional
   public void testCpuMotherboardCompatibilitySuccess() {
 
     CompatibilityRequestDTO request = new CompatibilityRequestDTO();
@@ -29,6 +32,7 @@ public class CompatibilityServiceUnitTests {
   }
 
   @Test
+  @Transactional
   public void testCpuMotherboardCompatibilityFail() {
 
     CompatibilityRequestDTO request = new CompatibilityRequestDTO();

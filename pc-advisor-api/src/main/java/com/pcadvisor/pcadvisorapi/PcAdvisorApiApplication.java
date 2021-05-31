@@ -21,6 +21,24 @@ public class PcAdvisorApiApplication {
                 .newKieContainer(ks.newReleaseId("org.pcadvisorkjar", "pc-advisor-kjar", "1.0-SNAPSHOT"));
         KieScanner kScanner = ks.newKieScanner(kContainer);
         // kScanner.start(10_000);
+
         return kContainer;
     }
+
+    /*
+     * @Bean public void makeRulesFromTemplate() throws IOException { InputStream
+     * template = PcAdvisorApiApplication.class.getResourceAsStream(
+     * "./QuestionRuleTemplate.drl");
+     * 
+     * DataProvider dataProvider = new ArrayDataProvider( new String[][] { new
+     * String[] { "1" }, new String[] { "3" }, new String[] { "4" }, new String[] {
+     * "5" }, new String[] { "7" }, new String[] { "9" }, new String[] { "10" } });
+     * 
+     * DataProviderCompiler converter = new DataProviderCompiler(); String drl =
+     * converter.compile(dataProvider, template); System.out.println(drl);
+     * 
+     * BufferedWriter writer = new BufferedWriter(new
+     * FileWriter("./QuestionRules.txt")); writer.write(drl); writer.flush();
+     * writer.close(); }
+     */
 }
