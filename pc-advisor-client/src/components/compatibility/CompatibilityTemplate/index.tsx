@@ -3,9 +3,8 @@ import { useSelector } from 'react-redux';
 
 import { RootState } from 'store';
 import StartScreen from '../StartScreen';
-import ChooseCPUScreen from '../ChooseCPUScreen';
-import ChooseMotherboardScreen from '../ChooseMotherboardScreen';
 import ResultScreen from '../ResultScreen';
+import ChooseComponentsScreen from '../ChooseComponentsScreen';
 import './style.scss';
 
 const CompatibilityTemplate: FC = () => {
@@ -16,9 +15,7 @@ const CompatibilityTemplate: FC = () => {
       case 0:
         return <StartScreen />;
       case 1:
-        return <ChooseCPUScreen />;
-      case 2:
-        return <ChooseMotherboardScreen />;
+        return <ChooseComponentsScreen />;
       case 3:
         return <ResultScreen />;
       default:

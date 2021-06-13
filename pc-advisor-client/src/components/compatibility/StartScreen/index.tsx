@@ -14,14 +14,16 @@ const StartScreen: FC = () => {
   };
 
   return (
-    <div>
+    <>
       <SectionTitle text="Compatibility" style={{ marginBottom: '64px' }} />
-      <div className="start-screen__text">
-        From here you can choose CPU and motherboard and check if they are
-        compatible
+      <div className="start-screen">
+        <div className="start-screen__text">
+          From here you can choose CPU and motherboard and check if they are
+          compatible
+        </div>
+        <SecondaryButton text="Start" buttonProps={{ onClick: handleNext }} />
       </div>
-      <SecondaryButton text="Start" buttonProps={{ onClick: handleNext }} />
-    </div>
+    </>
   );
 };
 

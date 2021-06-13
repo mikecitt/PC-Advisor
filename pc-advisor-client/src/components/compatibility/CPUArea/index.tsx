@@ -1,9 +1,12 @@
-import React, { FC, useState } from 'react';
-import axios from 'axios';
+import React, { FC, useEffect, useState } from 'react';
+import { LeftOutlined, MacCommandOutlined } from '@ant-design/icons';
+import { List } from 'antd';
 
 import SecondaryButton from 'shared/SecondaryButton';
 import CPUImage from 'assets/icons/cpu.svg';
-import { LeftOutlined } from '@ant-design/icons';
+import SearchInput from 'shared/SearchInput';
+import { getCpus } from 'services/cpu/cpu.service';
+import { CPUModel } from 'services/cpu/cpu.model';
 import './style.scss';
 
 enum CPUAreaMode {
@@ -12,10 +15,13 @@ enum CPUAreaMode {
 }
 
 const CPUArea: FC = () => {
-  const fetchCPU = async () => {
-    const response = await axios.get('http://localhost:8080/api/cpu');
-    return response.data;
-  };
+  const [cpus, setCpus] = useState<Array<CPUModel>>([]);
+
+  useEffect(() => {
+    getCpus().then((response) => {
+      setCpus(response.data);
+    });
+  }, []);
 
   const [mode, setMode] = useState<CPUAreaMode>(CPUAreaMode.Choose);
   const [allCPU, setAllCPU] = useState<Array<any>>([]);
@@ -24,35 +30,56 @@ const CPUArea: FC = () => {
     <div className="cpu-area__preview">
       <div className="cpu-area__preview__title">CPU</div>
       <div className="cpu-area__preview__body">
-        <div>
-          <div className="cpu-area__preview__subtitle">
-            AMD Ryzen 7 2800x 3.4hz
+        <div className="cpu-area__preview__body__area">
+          <div className="cpu-area__preview__body__area__name">
+            AMD Ryzen 7 2800x 3.4hz asddas dasd
           </div>
-          <div className="cpu-area__preview__subtitle">Price: $300</div>
           <SecondaryButton
             text="Change"
             buttonProps={{
               onClick: () => {
-                fetchCPU();
                 setMode(CPUAreaMode.Choose);
               }
             }}
           />
         </div>
-        <img src={CPUImage} alt="cpu" className="cpu-area__preview__image" />
+        <img
+          src={CPUImage}
+          alt="cpu"
+          className="cpu-area__preview__body__image"
+        />
       </div>
     </div>
   );
 
   const ChooseMode = () => (
-    <div className="cpu-area__search">
-      <div className="cpu-area__search__header">
-        <LeftOutlined onClick={() => setMode(CPUAreaMode.Preview)} />
-        <span>Choose</span>
+    <div className="cpu-area__choose">
+      <div className="cpu-area__choose__header">
+        <div className="cpu-area__choose__title">
+          <LeftOutlined
+            onClick={() => setMode(CPUAreaMode.Preview)}
+            className="cpu-area__choose__title__back-icon"
+          />
+          <div className="cpu-area__choose__title__text">Choose CPU</div>
+        </div>
+        <SearchInput antInputProps={{ placeholder: 'search' }} />
       </div>
-      {allCPU.map((cpu) => (
-        <span>{cpu.displayName}</span>
-      ))}
+      <div className="cpu-area__choose__body">
+        <List
+          itemLayout="horizontal"
+          className="cpu-area__choose__body__list"
+          dataSource={cpus}
+          renderItem={(item) => (
+            <List.Item>
+              <List.Item.Meta
+                avatar={<MacCommandOutlined />}
+                title={item.displayName}
+                description={`${item.cores}-core ${item.frequency}Hz`}
+              />
+            </List.Item>
+          )}
+        />
+      </div>
     </div>
   );
 
