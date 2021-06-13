@@ -2,6 +2,7 @@ package com.pcadvisor.pcadvisorapi.controller;
 
 import com.pcadvisor.pcadvisorapi.dto.ComputerProgramsDTO;
 import com.pcadvisor.pcadvisorapi.dto.PriorityDTO;
+import com.pcadvisor.pcadvisorapi.dto.SurveyQuestionsRequestDTO;
 import com.pcadvisor.pcadvisorapi.dto.UsageAreasDTO;
 import com.pcadvisor.pcadvisorapi.service.SurveyService;
 
@@ -18,6 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class SurveyController {
     @Autowired
     private SurveyService surveyService;
+
+    @PostMapping("/submitQuestions")
+    public ResponseEntity<ComputerProgramsDTO> submitQuestions(@RequestBody SurveyQuestionsRequestDTO request) {
+        return new ResponseEntity<>(surveyService.submitQuestions(request), HttpStatus.OK);
+    }
 
     @PostMapping("/usageArea")
     public ResponseEntity<ComputerProgramsDTO> submitUsageArea(@RequestBody UsageAreasDTO request) {

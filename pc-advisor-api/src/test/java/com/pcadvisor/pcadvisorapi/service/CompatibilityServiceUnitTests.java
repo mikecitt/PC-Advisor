@@ -2,8 +2,8 @@ package com.pcadvisor.pcadvisorapi.service;
 
 import javax.transaction.Transactional;
 
-import com.pcadvisor.pcadvisorapi.dto.request.CompatibilityRequestDTO;
-import com.pcadvisor.pcadvisorapi.dto.response.CompatibilityResponseDTO;
+import com.pcadvisor.pcadvisorapi.dto.CompatibilityRequestDTO;
+import com.pcadvisor.pcadvisorapi.dto.CompatibilityResponseDTO;
 
 import org.junit.Assert;
 import org.junit.Test;
