@@ -1,4 +1,4 @@
-package com.pcadvisor.pcadvisorapi.dto.response;
+package com.pcadvisor.pcadvisorapi.dto;
 
 import lombok.Data;
 

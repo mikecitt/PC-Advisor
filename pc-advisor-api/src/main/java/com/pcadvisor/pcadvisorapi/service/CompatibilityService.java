@@ -2,14 +2,12 @@ package com.pcadvisor.pcadvisorapi.service;
 
 import java.util.Optional;
 
-import com.pcadvisor.pcadvisorapi.dto.request.CompatibilityRequestDTO;
-import com.pcadvisor.pcadvisorapi.dto.response.CompatibilityResponseDTO;
+import com.pcadvisor.pcadvisorapi.dto.CompatibilityRequestDTO;
+import com.pcadvisor.pcadvisorapi.dto.CompatibilityResponseDTO;
 import com.pcadvisor.pcadvisorapi.exception.CPUNotFoundException;
 import com.pcadvisor.pcadvisorapi.exception.MotherboardNotFoundException;
 import com.pcadvisor.pcadvisorapi.model.CPU;
 import com.pcadvisor.pcadvisorapi.model.Motherboard;
-import com.pcadvisor.pcadvisorapi.repository.CPURepository;
-import com.pcadvisor.pcadvisorapi.repository.MotherboardRepository;
 
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
@@ -22,15 +20,15 @@ public class CompatibilityService {
   private KieContainer kieContainer;
 
   @Autowired
-  private CPURepository cpuRepository;
+  private CPUService cpuService;
 
   @Autowired
-  private MotherboardRepository motherboardRepository;
+  private MotherboardService motherboardService;
 
-  public CompatibilityResponseDTO checkCompatibility(CompatibilityRequestDTO request) {
+  public CompatibilityResponseDTO check(CompatibilityRequestDTO request) {
 
-    Optional<CPU> cpu = cpuRepository.findById(request.getCpuId());
-    Optional<Motherboard> motherboard = motherboardRepository.findById(request.getMotherboardId());
+    Optional<CPU> cpu = cpuService.findById(request.getCpuId());
+    Optional<Motherboard> motherboard = motherboardService.findById(request.getMotherboardId());
 
     if (cpu.isEmpty()) {
       throw new CPUNotFoundException("CPU with given id not found");
@@ -45,7 +43,8 @@ public class CompatibilityService {
     KieSession session = kieContainer.newKieSession("rulesSession");
     session.insert(cpu.get());
     session.insert(motherboard.get());
-    session.insert(response);
+    session.setGlobal("compatibilityResponse", response);
+    session.getAgenda().getAgendaGroup("compatibility").setFocus();
     session.fireAllRules();
     session.dispose();
     return response;

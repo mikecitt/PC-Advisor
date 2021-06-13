@@ -1,7 +1,11 @@
 package com.pcadvisor.pcadvisorapi.service;
 
+import com.pcadvisor.pcadvisorapi.drools.model.BestUsageArea;
+import com.pcadvisor.pcadvisorapi.drools.model.QuestionScore;
 import com.pcadvisor.pcadvisorapi.dto.ComputerProgramsDTO;
 import com.pcadvisor.pcadvisorapi.dto.PriorityDTO;
+import com.pcadvisor.pcadvisorapi.dto.QuestionRequestDTO;
+import com.pcadvisor.pcadvisorapi.dto.SurveyQuestionsRequestDTO;
 import com.pcadvisor.pcadvisorapi.dto.UsageAreasDTO;
 import com.pcadvisor.pcadvisorapi.model.ComputerProgram;
 import com.pcadvisor.pcadvisorapi.repository.ComputerProgramRepository;
@@ -21,16 +25,17 @@ public class SurveyService {
   @Autowired
   private ComputerProgramRepository computerProgramRepository;
 
-  public ComputerProgramsDTO submitUsageArea(@RequestBody UsageAreasDTO request) {
+  public ComputerProgramsDTO submitQuestions(@RequestBody SurveyQuestionsRequestDTO request) {
 
     ComputerProgramsDTO response = new ComputerProgramsDTO();
 
     KieSession session = kieContainer.newKieSession("rulesSession");
-    session.insert(request);
-    session.insert(response);
-    for (ComputerProgram program : computerProgramRepository.findAll()) {
-      session.insert(program);
+    for (QuestionRequestDTO question : request.getQuestions()) {
+      session.insert(question);
     }
+    session.insert(response);
+    session.insert(new QuestionScore());
+    session.insert(new BestUsageArea());
     session.fireAllRules();
     session.dispose();
 
@@ -44,6 +49,22 @@ public class SurveyService {
     KieSession session = kieContainer.newKieSession("rulesSession");
     session.insert(response);
     for (ComputerProgram program : request.getComputerPrograms()) {
+      session.insert(program);
+    }
+    session.fireAllRules();
+    session.dispose();
+
+    return response;
+  }
+
+  public ComputerProgramsDTO submitUsageArea(@RequestBody UsageAreasDTO request) {
+
+    ComputerProgramsDTO response = new ComputerProgramsDTO();
+
+    KieSession session = kieContainer.newKieSession("rulesSession");
+    session.insert(request);
+    session.insert(response);
+    for (ComputerProgram program : computerProgramRepository.findAll()) {
       session.insert(program);
     }
     session.fireAllRules();

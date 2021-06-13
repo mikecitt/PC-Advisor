@@ -1,5 +1,7 @@
 package rules1;
 
+import java.util.List;
+
 import com.pcadvisor.pcadvisorapi.dto.PriorityDTO;
 import com.pcadvisor.pcadvisorapi.dto.AffinitiesDTO;
 import com.pcadvisor.pcadvisorapi.model.CPU;
@@ -22,11 +24,16 @@ salience 100
         priorityDTO: PriorityDTO($cpuPriority: cpuPriority, $gpuPriority: gpuPriority)
         $mb: Motherboard()
         $cpu: CPU(score > ($cpuPriority * 900) && score < (($cpuPriority+2) * 900))
+        AffinitiesDTO(brandPref == null)
+        or
+        (
+            AffinitiesDTO($brandPref: brandPref) 
+            and
+            CPU(cpuBrand == $brandPref)
+        )
         $gpu: GPU(score > ($gpuPriority * 2000) && score < (($gpuPriority+2) * 2000))
         affinities: AffinitiesDTO()
-        //affinities: AffinitiesDTO(brandPref == null || brandPref == $cpu.getCpuBrand())
     then
-        //System.out.println($cpu.getDisplayName() + " + " + $mb.getDisplayName() + " + " + $gpu.getDisplayName());
         insert(new PCBuild($cpu, $mb, $gpu));
     end
 
@@ -35,16 +42,24 @@ agenda-group "cpu-gpu-ram"
 no-loop true
 salience 100
     when
-        priorityDTO: PriorityDTO($ramPriority: ramPriority)
         $pcBuild: PCBuild($cpu: cpu)
-        $ram: RAM(size >= ($ramPriority * 8 / 5))
+        priorityDTO: PriorityDTO($ramPriority: ramPriority)
+        Number($minSize : intValue ) from accumulate(
+            RAM($size : size, $size >= ($ramPriority * 8 / 5)), min($size)
+        )
+        (
+            $ram: RAM(size == $minSize, ramType == RamType.KIT)
+            and
+            CPU(cpuBrand == CPUBrand.AMD) from $cpu
+        ) or 
+        (
+            $ram: RAM(size == $minSize, ramType == RamType.SINGLE)
+            and
+            CPU(cpuBrand == CPUBrand.INTEL) from $cpu
+        )
+        
     then
-        //PCBuild newBuild = new PCBuild($pcBuild);
-        $pcBuild.setRam($ram);
-        update($pcBuild);
-        //$pcBuild.setRam($ram);
-        //update($pcBuild);
-        //insert(newBuild);
+        modify($pcBuild) { setRam($ram) };
     end
 
 rule "Power Supply choose"
@@ -55,8 +70,7 @@ salience 100
         $pcBuild: PCBuild($powerUsage: getPowerUsage())
         $psu: PowerSupply(wattage == (($powerUsage + 300) - ($powerUsage + 300)%100))
     then
-        $pcBuild.setPowerSupply($psu);
-        update($pcBuild);
+        modify($pcBuild) {setPowerSupply($psu)};
     end
 
 rule "Check Budget"
@@ -79,8 +93,7 @@ salience 50
         $affinities: AffinitiesDTO()
     then
         System.out.println("Povecavam budzet za 100e");
-        $affinities.setBudget($affinities.getBudget() + 100);
-        update($affinities);
+        modify($affinities) { setBudget($affinities.getBudget() + 100) };
     end
 
 rule "final"

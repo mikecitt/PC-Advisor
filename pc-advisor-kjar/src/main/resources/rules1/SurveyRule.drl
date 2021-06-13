@@ -2,33 +2,26 @@ package rules1;
 
 import com.pcadvisor.pcadvisorapi.model.ComputerProgram;
 import com.pcadvisor.pcadvisorapi.drools.model.BestUsageArea;
+import com.pcadvisor.pcadvisorapi.drools.model.QuestionScore;
 import com.pcadvisor.pcadvisorapi.model.UsageArea;
+import com.pcadvisor.pcadvisorapi.model.SurveyQuestion;
 import com.pcadvisor.pcadvisorapi.dto.PriorityDTO;
 import com.pcadvisor.pcadvisorapi.dto.ComputerProgramsDTO;
+import com.pcadvisor.pcadvisorapi.dto.QuestionRequestDTO;
 
-rule "Usage Area"
+rule "Questions"
     when
-        computerProgram: QuestionScore($scores: scores)
-        $usageArea: UsageArea()
-        $area : UsageArea(intValue) from accumulate
-                ($t:Map() from $scores.values  , init(Integer bestScore = 0; UsageArea bestArea = null),
-                                         action(
-                                         for(UsageArea key : $t.keySet()) {
-                                            if (bestScore < $t.get(key)) {
-                                                bestArea = key;
-                                            }
-                                         }
-                                         System.out.println("Best UsageArea : "+bestArea);
-                                         ),
-                                         result( bestArea ) )
+        questionRequestDTO: QuestionRequestDTO($id: id, $score: score)
+        $surveyQuestion: SurveyQuestion(id == $id, $usageArea: usageArea)
+        $questionScore: QuestionScore()
     then
-        $usageArea.setUsageArea($area);
+         modify($questionScore) { getScores().put($usageArea, $score) }
     end
 
 rule "Computer Program"
     when
         $computerProgram: ComputerProgram($usageArea: usageArea)
-        usageArea: UsageArea(usageArea == $usageArea)
+        usageArea: BestUsageArea(usageArea contains $usageArea)
         $computerProgramsDTO: ComputerProgramsDTO()
     then
         $computerProgramsDTO.getComputerPrograms().add($computerProgram);

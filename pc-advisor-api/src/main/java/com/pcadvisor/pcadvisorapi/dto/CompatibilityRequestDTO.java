@@ -1,4 +1,4 @@
-package com.pcadvisor.pcadvisorapi.dto.request;
+package com.pcadvisor.pcadvisorapi.dto;
 
 import javax.validation.constraints.NotNull;
 
