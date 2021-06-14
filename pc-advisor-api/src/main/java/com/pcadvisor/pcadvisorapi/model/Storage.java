@@ -7,11 +7,6 @@ import javax.validation.constraints.NotNull;
 
 import lombok.Data;
 
-enum StorageType {
-    SSD,
-    HDD
-}
-
 @Data
 @Entity
 public class Storage extends BasePCComponent {

@@ -11,6 +11,7 @@ import com.pcadvisor.pcadvisorapi.model.Chipset;
 import com.pcadvisor.pcadvisorapi.model.RamType;
 import com.pcadvisor.pcadvisorapi.model.CPUBrand;
 import com.pcadvisor.pcadvisorapi.model.Storage;
+import com.pcadvisor.pcadvisorapi.model.StorageType;
 import com.pcadvisor.pcadvisorapi.model.PowerSupply;
 import com.pcadvisor.pcadvisorapi.model.PCBuild;
 import com.pcadvisor.pcadvisorapi.drools.model.CpusGpus;
@@ -73,10 +74,62 @@ salience 100
         modify($pcBuild) {setPowerSupply($psu)};
     end
 
-rule "Check Budget"
+rule "storageMin default set"
 agenda-group "cpu-gpu-ram"
 no-loop true
 salience 100
+    when
+    $affinities: AffinitiesDTO($storageMin: storageMin == null)
+    then
+        modify($affinities) { setStorageMin(120) };
+    end
+
+rule "Hard drives choose only SSD"
+agenda-group "cpu-gpu-ram"
+no-loop true
+salience 70
+    when
+    AffinitiesDTO($storageMin: storageMin <= 500)
+    $pcBuild: PCBuild($storages: storage)
+    Number(intValue == 0) from accumulate(
+        Storage($t: this) from $storages,
+        count($t)
+    )
+    Number($minSize : intValue ) from accumulate(
+        Storage($size : size >= $storageMin, type == StorageType.SSD), min($size)
+    )
+    $storage: Storage(size == $minSize, type == StorageType.SSD)
+    then
+        modify($pcBuild) { getStorage().add($storage) };
+    end
+
+rule "Hard drives choose both SSD and HDD"
+agenda-group "cpu-gpu-ram"
+no-loop true
+salience 70
+    when
+    AffinitiesDTO($storageMin: storageMin > 500)
+    $pcBuild: PCBuild($storages: storage)
+    Number(intValue == 0) from accumulate(
+        Storage($t: this) from $storages,
+        count($t)
+    )
+    Number($minSizeSSD : intValue ) from accumulate(
+        Storage($size : size > 240, type == StorageType.SSD), min($size)
+    )
+    $storageSSD: Storage(size == $minSizeSSD, type == StorageType.SSD)
+    Number($minSizeHDD : intValue ) from accumulate(
+        Storage($size : size > ($storageMin - 240), type == StorageType.HDD), min($size)
+    )
+    $storageHDD: Storage(size == $minSizeHDD, type == StorageType.HDD)
+    then
+        modify($pcBuild) { getStorage().add($storageSSD), getStorage().add($storageHDD) };
+    end
+
+rule "Check Budget"
+agenda-group "cpu-gpu-ram"
+no-loop true
+salience 60
     when
         pcBuild: PCBuild($price: getPrice())
         affinities: AffinitiesDTO(budget < $price)
@@ -91,20 +144,10 @@ salience 50
     when
         not PCBuild()
         $affinities: AffinitiesDTO()
+        priorityDTO: PriorityDTO()
     then
         System.out.println("Povecavam budzet za 100e");
         modify($affinities) { setBudget($affinities.getBudget() + 100) };
     end
-
-rule "final"
-agenda-group "finish"
-no-loop true
-    when
-        $pcBuild: PCBuild(ram == null)
-    then
-        delete($pcBuild);
-        //System.out.println(pcBuild);
-    end
-
 
 
