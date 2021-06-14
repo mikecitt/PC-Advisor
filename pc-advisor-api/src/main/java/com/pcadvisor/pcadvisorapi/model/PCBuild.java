@@ -1,5 +1,6 @@
 package com.pcadvisor.pcadvisorapi.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Data;
@@ -11,7 +12,7 @@ public class PCBuild {
     private Motherboard motherboard;
     private PowerSupply powerSupply;
     private RAM ram;
-    private List<Storage> storage;
+    private List<Storage> storage = new ArrayList<Storage>();
 
     public PCBuild(CPU cpu, Motherboard motherboard, GPU gpu) {
         this.cpu = cpu;
