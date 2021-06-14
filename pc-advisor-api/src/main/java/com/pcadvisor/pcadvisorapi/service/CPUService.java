@@ -1,5 +1,6 @@
 package com.pcadvisor.pcadvisorapi.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.pcadvisor.pcadvisorapi.model.CPU;
@@ -16,5 +17,9 @@ public class CPUService {
 
   public Optional<CPU> findById(Long id) {
     return cpuRepository.findById(id);
+  }
+
+  public List<CPU> findAll() {
+    return cpuRepository.findAll();
   }
 }

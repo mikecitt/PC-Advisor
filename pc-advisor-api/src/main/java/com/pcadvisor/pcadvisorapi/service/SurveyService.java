@@ -1,10 +1,10 @@
 package com.pcadvisor.pcadvisorapi.service;
 
 import com.pcadvisor.pcadvisorapi.drools.model.BestUsageArea;
-import com.pcadvisor.pcadvisorapi.drools.model.QuestionScore;
+import com.pcadvisor.pcadvisorapi.drools.model.QuestionScores;
 import com.pcadvisor.pcadvisorapi.dto.ComputerProgramsDTO;
 import com.pcadvisor.pcadvisorapi.dto.PriorityDTO;
-import com.pcadvisor.pcadvisorapi.dto.QuestionRequestDTO;
+import com.pcadvisor.pcadvisorapi.dto.SurveyQuestionRequestDTO;
 import com.pcadvisor.pcadvisorapi.dto.SurveyQuestionsRequestDTO;
 import com.pcadvisor.pcadvisorapi.dto.UsageAreasDTO;
 import com.pcadvisor.pcadvisorapi.model.ComputerProgram;
@@ -30,11 +30,11 @@ public class SurveyService {
     ComputerProgramsDTO response = new ComputerProgramsDTO();
 
     KieSession session = kieContainer.newKieSession("rulesSession");
-    for (QuestionRequestDTO question : request.getQuestions()) {
+    for (SurveyQuestionRequestDTO question : request.getQuestions()) {
       session.insert(question);
     }
     session.insert(response);
-    session.insert(new QuestionScore());
+    session.insert(new QuestionScores());
     session.insert(new BestUsageArea());
     session.fireAllRules();
     session.dispose();

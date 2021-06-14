@@ -1,4 +1,4 @@
-package com.pcadvisor.pcadvisorapi;
+package rules1;
 import com.pcadvisor.pcadvisorapi.drools.model.Question;
 import com.pcadvisor.pcadvisorapi.drools.model.QuestionScore;
 

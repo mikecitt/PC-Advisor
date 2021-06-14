@@ -2,27 +2,29 @@ package rules1;
 
 import com.pcadvisor.pcadvisorapi.model.ComputerProgram;
 import com.pcadvisor.pcadvisorapi.drools.model.BestUsageArea;
-import com.pcadvisor.pcadvisorapi.drools.model.QuestionScore;
+import com.pcadvisor.pcadvisorapi.drools.model.QuestionScores;
 import com.pcadvisor.pcadvisorapi.model.UsageArea;
 import com.pcadvisor.pcadvisorapi.model.SurveyQuestion;
 import com.pcadvisor.pcadvisorapi.dto.PriorityDTO;
-import com.pcadvisor.pcadvisorapi.dto.ComputerProgramsDTO;
-import com.pcadvisor.pcadvisorapi.dto.QuestionRequestDTO;
+import com.pcadvisor.pcadvisorapi.dto.ComputerProgramsResponseDTO;
+import com.pcadvisor.pcadvisorapi.dto.SurveyQuestionRequestDTO;
+
+global QuestionScores questionScores;
+global ComputerProgramsResponseDTO
 
 rule "Questions"
     when
-        questionRequestDTO: QuestionRequestDTO($id: id, $score: score)
+        questionRequestDTO: SurveyQuestionRequestDTO($id: id, $score: score)
         $surveyQuestion: SurveyQuestion(id == $id, $usageArea: usageArea)
-        $questionScore: QuestionScore()
     then
-         modify($questionScore) { getScores().put($usageArea, $score) }
+        modify(questionScores) { getScores().put($usageArea, questionScores.get($usageArea) + $score) }
     end
 
-rule "Computer Program"
+rule "Computer Programs"
     when
         $computerProgram: ComputerProgram($usageArea: usageArea)
         usageArea: BestUsageArea(usageArea contains $usageArea)
-        $computerProgramsDTO: ComputerProgramsDTO()
+        $computerProgramsDTO: ComputerProgramsResponseDTO()
     then
         $computerProgramsDTO.getComputerPrograms().add($computerProgram);
     end

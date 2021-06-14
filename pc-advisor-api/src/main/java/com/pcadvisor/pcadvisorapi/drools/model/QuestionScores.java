@@ -8,11 +8,11 @@ import com.pcadvisor.pcadvisorapi.model.UsageArea;
 import lombok.Data;
 
 @Data
-public class QuestionScore {
+public class QuestionScores {
 
   private Map<UsageArea, Integer> scores;
 
-  public QuestionScore() {
+  public QuestionScores() {
     scores = new HashMap<>();
 
     scores.put(UsageArea.GAMING, 0);

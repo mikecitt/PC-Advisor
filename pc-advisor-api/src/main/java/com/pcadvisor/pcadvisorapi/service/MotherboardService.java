@@ -1,5 +1,6 @@
 package com.pcadvisor.pcadvisorapi.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.pcadvisor.pcadvisorapi.model.Motherboard;
@@ -16,5 +17,9 @@ public class MotherboardService {
 
   public Optional<Motherboard> findById(Long id) {
     return motherboardRepository.findById(id);
+  }
+
+  public List<Motherboard> findAll() {
+    return motherboardRepository.findAll();
   }
 }

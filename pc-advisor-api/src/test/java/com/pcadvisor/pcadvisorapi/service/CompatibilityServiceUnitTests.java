@@ -27,7 +27,7 @@ public class CompatibilityServiceUnitTests {
     request.setCpuId(1L);
     request.setMotherboardId(1L);
 
-    CompatibilityResponseDTO response = compatibilityService.checkCompatibility(request);
+    CompatibilityResponseDTO response = compatibilityService.check(request);
     Assert.assertTrue(response.isSuccess());
   }
 
@@ -39,7 +39,7 @@ public class CompatibilityServiceUnitTests {
     request.setCpuId(1L);
     request.setMotherboardId(4L);
 
-    CompatibilityResponseDTO response = compatibilityService.checkCompatibility(request);
+    CompatibilityResponseDTO response = compatibilityService.check(request);
     Assert.assertFalse(response.isSuccess());
   }
 }

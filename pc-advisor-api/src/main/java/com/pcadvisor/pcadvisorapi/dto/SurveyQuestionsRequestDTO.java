@@ -7,5 +7,5 @@ import lombok.Data;
 @Data
 public class SurveyQuestionsRequestDTO {
 
-  private Set<QuestionRequestDTO> questions;
+  private Set<SurveyQuestionRequestDTO> questions;
 }
