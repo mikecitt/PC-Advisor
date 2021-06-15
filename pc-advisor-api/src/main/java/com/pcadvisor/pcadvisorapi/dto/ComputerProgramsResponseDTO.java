@@ -8,11 +8,11 @@ import com.pcadvisor.pcadvisorapi.model.ComputerProgram;
 import lombok.Data;
 
 @Data
-public class ComputerProgramsDTO {
+public class ComputerProgramsResponseDTO {
 
   private Set<ComputerProgram> computerPrograms;
 
-  public ComputerProgramsDTO() {
+  public ComputerProgramsResponseDTO() {
     computerPrograms = new HashSet<ComputerProgram>();
   }
 }

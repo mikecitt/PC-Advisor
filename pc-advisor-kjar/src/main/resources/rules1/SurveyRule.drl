@@ -10,23 +10,22 @@ import com.pcadvisor.pcadvisorapi.dto.ComputerProgramsResponseDTO;
 import com.pcadvisor.pcadvisorapi.dto.SurveyQuestionRequestDTO;
 
 global QuestionScores questionScores;
-global ComputerProgramsResponseDTO
+global ComputerProgramsResponseDTO computerProgramsResponse;
 
 rule "Questions"
     when
         questionRequestDTO: SurveyQuestionRequestDTO($id: id, $score: score)
         $surveyQuestion: SurveyQuestion(id == $id, $usageArea: usageArea)
     then
-        modify(questionScores) { getScores().put($usageArea, questionScores.get($usageArea) + $score) }
+        modify(questionScores) { getScores().put($usageArea, questionScores.getScores().get($usageArea) + $score) }
     end
 
 rule "Computer Programs"
     when
         $computerProgram: ComputerProgram($usageArea: usageArea)
         usageArea: BestUsageArea(usageArea contains $usageArea)
-        $computerProgramsDTO: ComputerProgramsResponseDTO()
     then
-        $computerProgramsDTO.getComputerPrograms().add($computerProgram);
+        computerProgramsResponse.getComputerPrograms().add($computerProgram);
     end
 
 rule "Gaming"

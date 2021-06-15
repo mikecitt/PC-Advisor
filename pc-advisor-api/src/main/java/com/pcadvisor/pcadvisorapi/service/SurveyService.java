@@ -2,7 +2,7 @@ package com.pcadvisor.pcadvisorapi.service;
 
 import com.pcadvisor.pcadvisorapi.drools.model.BestUsageArea;
 import com.pcadvisor.pcadvisorapi.drools.model.QuestionScores;
-import com.pcadvisor.pcadvisorapi.dto.ComputerProgramsDTO;
+import com.pcadvisor.pcadvisorapi.dto.ComputerProgramsResponseDTO;
 import com.pcadvisor.pcadvisorapi.dto.PriorityDTO;
 import com.pcadvisor.pcadvisorapi.dto.SurveyQuestionRequestDTO;
 import com.pcadvisor.pcadvisorapi.dto.SurveyQuestionsRequestDTO;
@@ -25,9 +25,9 @@ public class SurveyService {
   @Autowired
   private ComputerProgramRepository computerProgramRepository;
 
-  public ComputerProgramsDTO submitQuestions(@RequestBody SurveyQuestionsRequestDTO request) {
+  public ComputerProgramsResponseDTO submitQuestions(@RequestBody SurveyQuestionsRequestDTO request) {
 
-    ComputerProgramsDTO response = new ComputerProgramsDTO();
+    ComputerProgramsResponseDTO response = new ComputerProgramsResponseDTO();
 
     KieSession session = kieContainer.newKieSession("rulesSession");
     for (SurveyQuestionRequestDTO question : request.getQuestions()) {
@@ -42,7 +42,7 @@ public class SurveyService {
     return response;
   }
 
-  public PriorityDTO submitComputerPrograms(@RequestBody ComputerProgramsDTO request) {
+  public PriorityDTO submitComputerPrograms(@RequestBody ComputerProgramsResponseDTO request) {
 
     PriorityDTO response = new PriorityDTO(0, 0, 0);
 
@@ -57,9 +57,9 @@ public class SurveyService {
     return response;
   }
 
-  public ComputerProgramsDTO submitUsageArea(@RequestBody UsageAreasDTO request) {
+  public ComputerProgramsResponseDTO submitUsageArea(@RequestBody UsageAreasDTO request) {
 
-    ComputerProgramsDTO response = new ComputerProgramsDTO();
+    ComputerProgramsResponseDTO response = new ComputerProgramsResponseDTO();
 
     KieSession session = kieContainer.newKieSession("rulesSession");
     session.insert(request);
