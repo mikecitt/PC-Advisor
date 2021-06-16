@@ -1,22 +1,25 @@
 template header
 id
+cpuPriority
+gpuPriority
+ramPriority
 
 package rules1;
 
-import com.pcadvisor.pcadvisorapi.model.ComputerProgram;
+import com.pcadvisor.pcadvisorapi.dto.ComputerProgramRequestDTO;
 import com.pcadvisor.pcadvisorapi.dto.PriorityDTO;
-
-global SurveyQuestionScores questionScores;
 
 template "computer-program-rules"
 
 rule "Computer Program @{id}"
 lock-on-active true
 when
-    $computerProgram: ComputerProgram(id == @{id})
+    $computerProgram: ComputerProgramRequestDTO(id == @{id})
     $priorityDTO: PriorityDTO()
 then
-    modify($priorityDTO) { getScores().put($usageArea, $questionScores.getScores().get($usageArea) + $score * @{multiply}) };
+    modify($priorityDTO) { setCpuPriority($priorityDTO.getCpuPriority() + @{cpuPriority}) };
+    modify($priorityDTO) { setGpuPriority($priorityDTO.getGpuPriority() + @{gpuPriority}) };
+    modify($priorityDTO) { setRamPriority($priorityDTO.getRamPriority() + @{ramPriority}) };
 end
 
 end template

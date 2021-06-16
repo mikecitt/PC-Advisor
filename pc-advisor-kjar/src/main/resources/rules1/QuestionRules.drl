@@ -2,6 +2,8 @@ package rules1;
 import com.pcadvisor.pcadvisorapi.dto.SurveyQuestionRequestDTO;
 import com.pcadvisor.pcadvisorapi.model.SurveyQuestion;
 import com.pcadvisor.pcadvisorapi.drools.model.SurveyQuestionScores;
+import com.pcadvisor.pcadvisorapi.dto.ComputerProgramsResponseDTO;
+import com.pcadvisor.pcadvisorapi.model.ComputerProgram;
 global ComputerProgramsResponseDTO computerProgramsResponse;
 
 rule "Survey Question 10"
@@ -11,7 +13,6 @@ when
     surveyQuestionRequest: SurveyQuestionRequestDTO(id == $id, $score: score)
     $questionScores: SurveyQuestionScores()
 then
-    System.out.println("sad");
     modify($questionScores) { getScores().put($usageArea, $questionScores.getScores().get($usageArea) + $score * 4) };
 end
 
@@ -25,6 +26,16 @@ then
     modify($questionScores) { getScores().put($usageArea, $questionScores.getScores().get($usageArea) + $score * 5) };
 end
 
+rule "Survey Question 8"
+lock-on-active true
+when
+    surveyQuestion: SurveyQuestion($id: id, id == 8, $usageArea: usageArea)
+    surveyQuestionRequest: SurveyQuestionRequestDTO(id == $id, $score: score)
+    $questionScores: SurveyQuestionScores()
+then
+    modify($questionScores) { getScores().put($usageArea, $questionScores.getScores().get($usageArea) + $score * 2) };
+end
+
 rule "Survey Question 7"
 lock-on-active true
 when
@@ -33,6 +44,16 @@ when
     $questionScores: SurveyQuestionScores()
 then
     modify($questionScores) { getScores().put($usageArea, $questionScores.getScores().get($usageArea) + $score * 6) };
+end
+
+rule "Survey Question 6"
+lock-on-active true
+when
+    surveyQuestion: SurveyQuestion($id: id, id == 6, $usageArea: usageArea)
+    surveyQuestionRequest: SurveyQuestionRequestDTO(id == $id, $score: score)
+    $questionScores: SurveyQuestionScores()
+then
+    modify($questionScores) { getScores().put($usageArea, $questionScores.getScores().get($usageArea) + $score * 4) };
 end
 
 rule "Survey Question 5"
@@ -63,6 +84,16 @@ when
     $questionScores: SurveyQuestionScores()
 then
     modify($questionScores) { getScores().put($usageArea, $questionScores.getScores().get($usageArea) + $score * 5) };
+end
+
+rule "Survey Question 2"
+lock-on-active true
+when
+    surveyQuestion: SurveyQuestion($id: id, id == 2, $usageArea: usageArea)
+    surveyQuestionRequest: SurveyQuestionRequestDTO(id == $id, $score: score)
+    $questionScores: SurveyQuestionScores()
+then
+    modify($questionScores) { getScores().put($usageArea, $questionScores.getScores().get($usageArea) + $score * 3) };
 end
 
 rule "Survey Question 1"

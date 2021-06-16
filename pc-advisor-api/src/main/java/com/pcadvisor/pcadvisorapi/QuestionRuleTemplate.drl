@@ -8,8 +8,6 @@ import com.pcadvisor.pcadvisorapi.dto.SurveyQuestionRequestDTO;
 import com.pcadvisor.pcadvisorapi.model.SurveyQuestion;
 import com.pcadvisor.pcadvisorapi.drools.model.SurveyQuestionScores;
 
-global SurveyQuestionScores questionScores;
-
 template "question-rules"
 
 rule "Survey Question @{id}"

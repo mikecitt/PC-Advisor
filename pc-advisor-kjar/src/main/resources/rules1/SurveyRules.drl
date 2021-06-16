@@ -1,0 +1,147 @@
+package rules1;
+import com.pcadvisor.pcadvisorapi.dto.ComputerProgramRequestDTO;
+import com.pcadvisor.pcadvisorapi.dto.PriorityDTO;
+
+rule "Computer Program 10"
+lock-on-active true
+when
+    $computerProgram: ComputerProgramRequestDTO(id == 10)
+    $priorityDTO: PriorityDTO()
+then
+    modify($priorityDTO) { setCpuPriority($priorityDTO.getCpuPriority() + 4) };
+    modify($priorityDTO) { setGpuPriority($priorityDTO.getGpuPriority() + 4) };
+    modify($priorityDTO) { setRamPriority($priorityDTO.getRamPriority() + 2) };
+end
+
+rule "Computer Program 9"
+lock-on-active true
+when
+    $computerProgram: ComputerProgramRequestDTO(id == 9)
+    $priorityDTO: PriorityDTO()
+then
+    modify($priorityDTO) { setCpuPriority($priorityDTO.getCpuPriority() + 5) };
+    modify($priorityDTO) { setGpuPriority($priorityDTO.getGpuPriority() + 8) };
+    modify($priorityDTO) { setRamPriority($priorityDTO.getRamPriority() + 3) };
+end
+
+rule "Computer Program 8"
+lock-on-active true
+when
+    $computerProgram: ComputerProgramRequestDTO(id == 8)
+    $priorityDTO: PriorityDTO()
+then
+    modify($priorityDTO) { setCpuPriority($priorityDTO.getCpuPriority() + 2) };
+    modify($priorityDTO) { setGpuPriority($priorityDTO.getGpuPriority() + 3) };
+    modify($priorityDTO) { setRamPriority($priorityDTO.getRamPriority() + 1) };
+end
+
+rule "Computer Program 7"
+lock-on-active true
+when
+    $computerProgram: ComputerProgramRequestDTO(id == 7)
+    $priorityDTO: PriorityDTO()
+then
+    modify($priorityDTO) { setCpuPriority($priorityDTO.getCpuPriority() + 6) };
+    modify($priorityDTO) { setGpuPriority($priorityDTO.getGpuPriority() + 1) };
+    modify($priorityDTO) { setRamPriority($priorityDTO.getRamPriority() + 2) };
+end
+
+rule "Computer Program 6"
+lock-on-active true
+when
+    $computerProgram: ComputerProgramRequestDTO(id == 6)
+    $priorityDTO: PriorityDTO()
+then
+    modify($priorityDTO) { setCpuPriority($priorityDTO.getCpuPriority() + 2) };
+    modify($priorityDTO) { setGpuPriority($priorityDTO.getGpuPriority() + 5) };
+    modify($priorityDTO) { setRamPriority($priorityDTO.getRamPriority() + 4) };
+end
+
+rule "Computer Program 5"
+lock-on-active true
+when
+    $computerProgram: ComputerProgramRequestDTO(id == 5)
+    $priorityDTO: PriorityDTO()
+then
+    modify($priorityDTO) { setCpuPriority($priorityDTO.getCpuPriority() + 1) };
+    modify($priorityDTO) { setGpuPriority($priorityDTO.getGpuPriority() + 8) };
+    modify($priorityDTO) { setRamPriority($priorityDTO.getRamPriority() + 3) };
+end
+
+rule "Computer Program 4"
+lock-on-active true
+when
+    $computerProgram: ComputerProgramRequestDTO(id == 4)
+    $priorityDTO: PriorityDTO()
+then
+    modify($priorityDTO) { setCpuPriority($priorityDTO.getCpuPriority() + 2) };
+    modify($priorityDTO) { setGpuPriority($priorityDTO.getGpuPriority() + 3) };
+    modify($priorityDTO) { setRamPriority($priorityDTO.getRamPriority() + 7) };
+end
+
+rule "Computer Program 3"
+lock-on-active true
+when
+    $computerProgram: ComputerProgramRequestDTO(id == 3)
+    $priorityDTO: PriorityDTO()
+then
+    modify($priorityDTO) { setCpuPriority($priorityDTO.getCpuPriority() + 5) };
+    modify($priorityDTO) { setGpuPriority($priorityDTO.getGpuPriority() + 6) };
+    modify($priorityDTO) { setRamPriority($priorityDTO.getRamPriority() + 2) };
+end
+
+rule "Computer Program 2"
+lock-on-active true
+when
+    $computerProgram: ComputerProgramRequestDTO(id == 2)
+    $priorityDTO: PriorityDTO()
+then
+    modify($priorityDTO) { setCpuPriority($priorityDTO.getCpuPriority() + 1) };
+    modify($priorityDTO) { setGpuPriority($priorityDTO.getGpuPriority() + 3) };
+    modify($priorityDTO) { setRamPriority($priorityDTO.getRamPriority() + 4) };
+end
+
+rule "Computer Program 1"
+lock-on-active true
+when
+    $computerProgram: ComputerProgramRequestDTO(id == 1)
+    $priorityDTO: PriorityDTO()
+then
+    modify($priorityDTO) { setCpuPriority($priorityDTO.getCpuPriority() + 3) };
+    modify($priorityDTO) { setGpuPriority($priorityDTO.getGpuPriority() + 2) };
+    modify($priorityDTO) { setRamPriority($priorityDTO.getRamPriority() + 8) };
+end
+
+rule "Priority Reduce"
+salience 50
+    when
+        $priorityDTO: PriorityDTO(cpuPriority + gpuPriority + ramPriority >= 20)
+    then
+        modify($priorityDTO) { setCpuPriority($priorityDTO.getCpuPriority() / 2) };
+        modify($priorityDTO) { setGpuPriority($priorityDTO.getGpuPriority() / 2) };
+        modify($priorityDTO) { setRamPriority($priorityDTO.getRamPriority() / 2) };
+    end
+
+rule "CPU Reduce"
+salience 50
+    when
+        $priorityDTO: PriorityDTO(cpuPriority >= 10)
+    then
+        modify($priorityDTO) { setCpuPriority(10) };
+    end
+
+rule "GPU Reduce"
+salience 50
+   when
+       $priorityDTO: PriorityDTO(gpuPriority >= 10)
+   then
+       modify($priorityDTO) { setGpuPriority(10) };
+   end
+
+rule "RAM Reduce"
+salience 50
+    when
+        $priorityDTO: PriorityDTO(ramPriority >= 10)
+    then
+        modify($priorityDTO) { setRamPriority(10) };
+    end

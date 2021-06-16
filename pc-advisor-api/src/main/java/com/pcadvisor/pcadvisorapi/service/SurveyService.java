@@ -1,6 +1,8 @@
 package com.pcadvisor.pcadvisorapi.service;
 
 import com.pcadvisor.pcadvisorapi.drools.model.SurveyQuestionScores;
+import com.pcadvisor.pcadvisorapi.dto.ComputerProgramRequestDTO;
+import com.pcadvisor.pcadvisorapi.dto.ComputerProgramsRequestDTO;
 import com.pcadvisor.pcadvisorapi.dto.ComputerProgramsResponseDTO;
 import com.pcadvisor.pcadvisorapi.dto.PriorityDTO;
 import com.pcadvisor.pcadvisorapi.dto.SurveyQuestionRequestDTO;
@@ -52,13 +54,13 @@ public class SurveyService {
     return response;
   }
 
-  public PriorityDTO submitComputerPrograms(@RequestBody ComputerProgramsResponseDTO request) {
+  public PriorityDTO submitComputerPrograms(@RequestBody ComputerProgramsRequestDTO request) {
 
     PriorityDTO response = new PriorityDTO(0, 0, 0);
 
     KieSession session = kieContainer.newKieSession("rulesSession");
     session.insert(response);
-    for (ComputerProgram program : request.getComputerPrograms()) {
+    for (ComputerProgramRequestDTO program : request.getComputerPrograms()) {
       session.insert(program);
     }
     session.fireAllRules();
