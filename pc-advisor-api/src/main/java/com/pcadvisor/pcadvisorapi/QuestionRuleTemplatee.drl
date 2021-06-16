@@ -1,0 +1,25 @@
+template header
+id
+multiply
+
+package rules1;
+
+import com.pcadvisor.pcadvisorapi.dto.SurveyQuestionRequestDTO;
+import com.pcadvisor.pcadvisorapi.model.SurveyQuestion;
+import com.pcadvisor.pcadvisorapi.drools.model.SurveyQuestionScores;
+
+global SurveyQuestionScores questionScores;
+
+template "question-rules"
+
+rule "Survey Question @{id}"
+lock-on-active true
+when
+    surveyQuestion: SurveyQuestion($id: id, id == @{id}, $usageArea: usageArea)
+    surveyQuestionRequest: SurveyQuestionRequestDTO(id == $id, $score: score)
+    $questionScores: SurveyQuestionScores()
+then
+    modify($questionScores) { getScores().put($usageArea, $questionScores.getScores().get($usageArea) + $score * @{multiply}) };
+end
+
+end template
