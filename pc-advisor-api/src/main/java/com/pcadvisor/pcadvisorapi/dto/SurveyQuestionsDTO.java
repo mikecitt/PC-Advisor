@@ -5,7 +5,7 @@ import java.util.Set;
 import lombok.Data;
 
 @Data
-public class SurveyQuestionsRequestDTO {
+public class SurveyQuestionsDTO {
 
   private Set<SurveyQuestionRequestDTO> questions;
 }

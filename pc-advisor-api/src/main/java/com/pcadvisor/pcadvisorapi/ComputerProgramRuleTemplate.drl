@@ -1,0 +1,22 @@
+template header
+id
+
+package rules1;
+
+import com.pcadvisor.pcadvisorapi.model.ComputerProgram;
+import com.pcadvisor.pcadvisorapi.dto.PriorityDTO;
+
+global SurveyQuestionScores questionScores;
+
+template "computer-program-rules"
+
+rule "Computer Program @{id}"
+lock-on-active true
+when
+    $computerProgram: ComputerProgram(id == @{id})
+    $priorityDTO: PriorityDTO()
+then
+    modify($priorityDTO) { getScores().put($usageArea, $questionScores.getScores().get($usageArea) + $score * @{multiply}) };
+end
+
+end template

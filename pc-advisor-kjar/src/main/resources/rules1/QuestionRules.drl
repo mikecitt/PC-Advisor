@@ -1,0 +1,84 @@
+package rules1;
+import com.pcadvisor.pcadvisorapi.dto.SurveyQuestionRequestDTO;
+import com.pcadvisor.pcadvisorapi.model.SurveyQuestion;
+import com.pcadvisor.pcadvisorapi.drools.model.SurveyQuestionScores;
+global ComputerProgramsResponseDTO computerProgramsResponse;
+
+rule "Survey Question 10"
+lock-on-active true
+when
+    surveyQuestion: SurveyQuestion($id: id, id == 10, $usageArea: usageArea)
+    surveyQuestionRequest: SurveyQuestionRequestDTO(id == $id, $score: score)
+    $questionScores: SurveyQuestionScores()
+then
+    System.out.println("sad");
+    modify($questionScores) { getScores().put($usageArea, $questionScores.getScores().get($usageArea) + $score * 4) };
+end
+
+rule "Survey Question 9"
+lock-on-active true
+when
+    surveyQuestion: SurveyQuestion($id: id, id == 9, $usageArea: usageArea)
+    surveyQuestionRequest: SurveyQuestionRequestDTO(id == $id, $score: score)
+    $questionScores: SurveyQuestionScores()
+then
+    modify($questionScores) { getScores().put($usageArea, $questionScores.getScores().get($usageArea) + $score * 5) };
+end
+
+rule "Survey Question 7"
+lock-on-active true
+when
+    surveyQuestion: SurveyQuestion($id: id, id == 7, $usageArea: usageArea)
+    surveyQuestionRequest: SurveyQuestionRequestDTO(id == $id, $score: score)
+    $questionScores: SurveyQuestionScores()
+then
+    modify($questionScores) { getScores().put($usageArea, $questionScores.getScores().get($usageArea) + $score * 6) };
+end
+
+rule "Survey Question 5"
+lock-on-active true
+when
+    surveyQuestion: SurveyQuestion($id: id, id == 5, $usageArea: usageArea)
+    surveyQuestionRequest: SurveyQuestionRequestDTO(id == $id, $score: score)
+    $questionScores: SurveyQuestionScores()
+then
+    modify($questionScores) { getScores().put($usageArea, $questionScores.getScores().get($usageArea) + $score * 1) };
+end
+
+rule "Survey Question 4"
+lock-on-active true
+when
+    surveyQuestion: SurveyQuestion($id: id, id == 4, $usageArea: usageArea)
+    surveyQuestionRequest: SurveyQuestionRequestDTO(id == $id, $score: score)
+    $questionScores: SurveyQuestionScores()
+then
+    modify($questionScores) { getScores().put($usageArea, $questionScores.getScores().get($usageArea) + $score * 2) };
+end
+
+rule "Survey Question 3"
+lock-on-active true
+when
+    surveyQuestion: SurveyQuestion($id: id, id == 3, $usageArea: usageArea)
+    surveyQuestionRequest: SurveyQuestionRequestDTO(id == $id, $score: score)
+    $questionScores: SurveyQuestionScores()
+then
+    modify($questionScores) { getScores().put($usageArea, $questionScores.getScores().get($usageArea) + $score * 5) };
+end
+
+rule "Survey Question 1"
+lock-on-active true
+when
+    surveyQuestion: SurveyQuestion($id: id, id == 1, $usageArea: usageArea)
+    surveyQuestionRequest: SurveyQuestionRequestDTO(id == $id, $score: score)
+    $questionScores: SurveyQuestionScores()
+then
+    modify($questionScores) { getScores().put($usageArea, $questionScores.getScores().get($usageArea) + $score * 3) };
+end
+
+rule "ComputerPrograms"
+when
+    $computerProgram: ComputerProgram($usageArea: usageArea)
+    $questionScores: SurveyQuestionScores(getBest() contains $usageArea)
+then
+    computerProgramsResponse.getComputerPrograms().add($computerProgram);
+end

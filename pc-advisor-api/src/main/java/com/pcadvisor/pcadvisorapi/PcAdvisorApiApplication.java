@@ -1,7 +1,5 @@
 package com.pcadvisor.pcadvisorapi;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -42,12 +40,7 @@ public class PcAdvisorApiApplication {
 
         DataProviderCompiler converter = new DataProviderCompiler();
         String drl = converter.compile(dataProvider, template);
-        System.out.println(drl);
-
-        BufferedWriter writer = new BufferedWriter(new FileWriter("./QuestionRules.txt"));
-        writer.write(drl);
-        writer.flush();
-        writer.close();
+        // System.out.println(drl);
     }
 
 }

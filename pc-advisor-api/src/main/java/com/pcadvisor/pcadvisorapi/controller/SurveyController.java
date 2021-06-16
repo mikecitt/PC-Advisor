@@ -2,7 +2,7 @@ package com.pcadvisor.pcadvisorapi.controller;
 
 import com.pcadvisor.pcadvisorapi.dto.ComputerProgramsResponseDTO;
 import com.pcadvisor.pcadvisorapi.dto.PriorityDTO;
-import com.pcadvisor.pcadvisorapi.dto.SurveyQuestionsRequestDTO;
+import com.pcadvisor.pcadvisorapi.dto.SurveyQuestionsDTO;
 import com.pcadvisor.pcadvisorapi.dto.UsageAreasDTO;
 import com.pcadvisor.pcadvisorapi.service.SurveyService;
 
@@ -21,7 +21,7 @@ public class SurveyController {
     private SurveyService surveyService;
 
     @PostMapping("/submitQuestions")
-    public ResponseEntity<ComputerProgramsResponseDTO> submitQuestions(@RequestBody SurveyQuestionsRequestDTO request) {
+    public ResponseEntity<ComputerProgramsResponseDTO> submitQuestions(@RequestBody SurveyQuestionsDTO request) {
         return new ResponseEntity<>(surveyService.submitQuestions(request), HttpStatus.OK);
     }
 

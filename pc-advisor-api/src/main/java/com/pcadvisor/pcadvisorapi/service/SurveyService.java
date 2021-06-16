@@ -1,14 +1,13 @@
 package com.pcadvisor.pcadvisorapi.service;
 
-import com.pcadvisor.pcadvisorapi.drools.model.BestUsageArea;
-import com.pcadvisor.pcadvisorapi.drools.model.QuestionScores;
+import com.pcadvisor.pcadvisorapi.drools.model.SurveyQuestionScores;
 import com.pcadvisor.pcadvisorapi.dto.ComputerProgramsResponseDTO;
 import com.pcadvisor.pcadvisorapi.dto.PriorityDTO;
 import com.pcadvisor.pcadvisorapi.dto.SurveyQuestionRequestDTO;
-import com.pcadvisor.pcadvisorapi.dto.SurveyQuestionsRequestDTO;
+import com.pcadvisor.pcadvisorapi.dto.SurveyQuestionsDTO;
 import com.pcadvisor.pcadvisorapi.dto.UsageAreasDTO;
 import com.pcadvisor.pcadvisorapi.model.ComputerProgram;
-import com.pcadvisor.pcadvisorapi.repository.ComputerProgramRepository;
+import com.pcadvisor.pcadvisorapi.model.SurveyQuestion;
 
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
@@ -23,20 +22,31 @@ public class SurveyService {
   private KieContainer kieContainer;
 
   @Autowired
-  private ComputerProgramRepository computerProgramRepository;
+  private ComputerProgramService computerProgramService;
 
-  public ComputerProgramsResponseDTO submitQuestions(@RequestBody SurveyQuestionsRequestDTO request) {
+  @Autowired
+  private SurveyQuestionService surveyQuestionService;
+
+  public ComputerProgramsResponseDTO submitQuestions(@RequestBody SurveyQuestionsDTO request) {
 
     ComputerProgramsResponseDTO response = new ComputerProgramsResponseDTO();
+    SurveyQuestionScores questionScores = new SurveyQuestionScores();
 
     KieSession session = kieContainer.newKieSession("rulesSession");
     for (SurveyQuestionRequestDTO question : request.getQuestions()) {
       session.insert(question);
     }
-    session.insert(response);
-    session.insert(new QuestionScores());
-    session.insert(new BestUsageArea());
+    for (SurveyQuestion question : surveyQuestionService.findAll()) {
+      session.insert(question);
+    }
+    for (ComputerProgram program : computerProgramService.findAll()) {
+      session.insert(program);
+    }
+
+    session.insert(questionScores);
+    session.setGlobal("computerProgramsResponse", response);
     session.fireAllRules();
+    System.out.println(questionScores);
     session.dispose();
 
     return response;
@@ -64,7 +74,7 @@ public class SurveyService {
     KieSession session = kieContainer.newKieSession("rulesSession");
     session.insert(request);
     session.insert(response);
-    for (ComputerProgram program : computerProgramRepository.findAll()) {
+    for (ComputerProgram program : computerProgramService.findAll()) {
       session.insert(program);
     }
     session.fireAllRules();
