@@ -1,7 +1,10 @@
 package com.pcadvisor.pcadvisorapi.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import com.pcadvisor.pcadvisorapi.dto.FindAllMotherboardsRequestDTO;
 import com.pcadvisor.pcadvisorapi.dto.CompatibilityRequestDTO;
 import com.pcadvisor.pcadvisorapi.dto.CompatibilityResponseDTO;
 import com.pcadvisor.pcadvisorapi.exception.CPUNotFoundException;
@@ -11,6 +14,8 @@ import com.pcadvisor.pcadvisorapi.model.Motherboard;
 
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
+import org.kie.api.runtime.rule.QueryResults;
+import org.kie.api.runtime.rule.QueryResultsRow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,9 +49,37 @@ public class CompatibilityService {
     session.insert(cpu.get());
     session.insert(motherboard.get());
     session.setGlobal("compatibilityResponse", response);
-    session.getAgenda().getAgendaGroup("compatibility").setFocus();
+    session.getAgenda().getAgendaGroup("checkCompatibility").setFocus();
     session.fireAllRules();
     session.dispose();
     return response;
+  }
+
+  public List<Motherboard> findAllMotherboards(FindAllMotherboardsRequestDTO request) {
+
+    KieSession session = kieContainer.newKieSession("rulesSession");
+    for (Motherboard motherboard : motherboardService.findAll()) {
+      session.insert(motherboard);
+    }
+
+    Optional<CPU> cpu = cpuService.findById(request.getCpuId());
+
+    if (cpu.isEmpty()) {
+      throw new CPUNotFoundException("CPU with given id not found");
+    }
+
+    QueryResults results = session.getQueryResults("Find all motherboards for CPU", cpu.get());
+
+    List<Motherboard> motherboards = new ArrayList<Motherboard>();
+
+    for (QueryResultsRow quesryResult : results) {
+      Motherboard motherboard = (Motherboard) quesryResult.get("$motherboard");
+      motherboards.add(motherboard);
+    }
+
+    // session.fireAllRules();
+
+    session.dispose();
+    return motherboards;
   }
 }

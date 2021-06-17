@@ -7,10 +7,14 @@ import com.pcadvisor.pcadvisorapi.dto.CompatibilityResponseDTO;
 global CompatibilityResponseDTO compatibilityResponse;
 
 rule "CheckCompatibilityRule"
-    agenda-group "compatibility"
+    agenda-group "checkCompatibility"
     when
         motherboard: Motherboard($chipset: chipset)
         cpu: CPU(compatibleChipsets contains $chipset)
     then
         compatibilityResponse.setSuccess(true);
     end
+
+query "Find all motherboards for CPU" (CPU $cpu)
+    $motherboard: Motherboard(chipset memberOf $cpu.getCompatibleChipsets())
+end
