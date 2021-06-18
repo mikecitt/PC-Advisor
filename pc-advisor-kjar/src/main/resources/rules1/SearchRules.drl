@@ -1,0 +1,15 @@
+/*package rules1;
+
+import com.pcadvisor.pcadvisorapi.model.CPU;
+import com.pcadvisor.pcadvisorapi.model.Motherboard;
+import com.pcadvisor.pcadvisorapi.model.GPU;
+import com.pcadvisor.pcadvisorapi.model.PowerSupply;
+
+query findCheapPCBuild(Double cpuBudget, Double motherboardBudget, Double gpuBudget, Double powerBudget)
+    motherboard: Motherboard(price <= motherboardBudget, $chipset: chipset)
+    cpu: CPU(price <= cpuBudget, compatibleChipsets contains $chipset, $cpuTDP: TDP)
+    gpu: GPU(price <= gpuBudget, $gpuTDP: TDP)
+    power: PowerSupply(price <= powerBudget, wattage >= $cpuTDP + $gpuTDP)
+    or
+    findCheapPCBuild(cpuBudget + 20, motherboardBudget + 20, gpuBudget + 20, powerBudget + 20)
+end*/
