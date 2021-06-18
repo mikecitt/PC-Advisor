@@ -9,7 +9,7 @@ import { getCpus } from 'services/cpu/cpu.service';
 import { CPUModel } from 'services/cpu/cpu.model';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'store';
-import { setCPU } from 'store/compatibility/actions';
+import { setCompatibilityCPU } from 'store/compatibility/actions';
 import './style.scss';
 
 enum CPUAreaMode {
@@ -60,7 +60,7 @@ const CPUArea: FC = () => {
     }, []);
 
     const handleCPUSelect = (cpu: CPUModel) => {
-      dispatch(setCPU(cpu));
+      dispatch(setCompatibilityCPU(cpu));
 
       setMode(CPUAreaMode.Preview);
     };

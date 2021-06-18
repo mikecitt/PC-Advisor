@@ -16,4 +16,8 @@
   &:hover {
     background-color: #2288c2;
   }
+
+  &:disabled {
+    background-color: $link-disabled;
+  }
 }

@@ -4,7 +4,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import SecondaryButton from 'shared/SecondaryButton';
 import SectionTitle from 'shared/SectionTitle';
 import { RootState } from 'store';
-import { nextStep, previousStep } from 'store/compatibility/actions';
+import {
+  nextCompatibilityStep,
+  previousCompatibilityStep
+} from 'store/compatibility/actions';
 import CPUArea from '../CPUArea';
 import MotherboardArea from '../MotherboardArea';
 import './style.scss';
@@ -19,11 +22,11 @@ const ChooseComponentsScreen: FC = () => {
   const dispatch = useDispatch();
 
   const handlePrevious = () => {
-    dispatch(previousStep());
+    dispatch(previousCompatibilityStep());
   };
 
   const handleNext = () => {
-    dispatch(nextStep());
+    dispatch(nextCompatibilityStep());
   };
 
   return (

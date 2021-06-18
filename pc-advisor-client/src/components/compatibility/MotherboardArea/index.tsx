@@ -8,7 +8,7 @@ import SearchInput from 'shared/SearchInput';
 import { MotherboardModel } from 'services/motherboard/motherboard.model';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from 'store';
-import { setMotherboard } from 'store/compatibility/actions';
+import { setCompatibilityMotherboard } from 'store/compatibility/actions';
 import { getMotherboards } from 'services/motherboard/motherboard.service';
 import './style.scss';
 
@@ -66,7 +66,7 @@ const MotherboardArea: FC = () => {
     }, []);
 
     const handleMotherboardSelect = (motherboard: MotherboardModel) => {
-      dispatch(setMotherboard(motherboard));
+      dispatch(setCompatibilityMotherboard(motherboard));
 
       setMode(MotherboardAreaMode.Preview);
     };

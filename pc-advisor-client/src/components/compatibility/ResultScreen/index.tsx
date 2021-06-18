@@ -4,7 +4,7 @@ import { Result } from 'antd';
 import SecondaryButton from 'shared/SecondaryButton';
 import SectionTitle from 'shared/SectionTitle';
 import { useDispatch, useSelector } from 'react-redux';
-import { reset } from 'store/compatibility/actions';
+import { resetCompatibility } from 'store/compatibility/actions';
 import { getCompatibility } from 'services/compatibility/compatibility.service';
 import { RootState } from 'store';
 import './style.scss';
@@ -20,7 +20,7 @@ const ResultScreen: FC = () => {
   );
 
   const handleReset = () => {
-    dispatch(reset());
+    dispatch(resetCompatibility());
   };
 
   const [success, setSuccess] = useState<boolean | undefined>(undefined);
