@@ -7,6 +7,9 @@ import CPUImage from 'assets/icons/cpu.svg';
 import SearchInput from 'shared/SearchInput';
 import { getCpus } from 'services/cpu/cpu.service';
 import { CPUModel } from 'services/cpu/cpu.model';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from 'store';
+import { setCPU } from 'store/compatibility/actions';
 import './style.scss';
 
 enum CPUAreaMode {
@@ -15,16 +18,11 @@ enum CPUAreaMode {
 }
 
 const CPUArea: FC = () => {
-  const [cpus, setCpus] = useState<Array<CPUModel>>([]);
-
-  useEffect(() => {
-    getCpus().then((response) => {
-      setCpus(response.data);
-    });
-  }, []);
-
+  const dispatch = useDispatch();
   const [mode, setMode] = useState<CPUAreaMode>(CPUAreaMode.Choose);
-  const [allCPU, setAllCPU] = useState<Array<any>>([]);
+  const selectedCPU = useSelector(
+    (state: RootState) => state.compatibility.cpu
+  );
 
   const PreviewMode = () => (
     <div className="cpu-area__preview">
@@ -32,7 +30,7 @@ const CPUArea: FC = () => {
       <div className="cpu-area__preview__body">
         <div className="cpu-area__preview__body__area">
           <div className="cpu-area__preview__body__area__name">
-            AMD Ryzen 7 2800x 3.4hz asddas dasd
+            {selectedCPU ? selectedCPU.displayName : 'None selected'}
           </div>
           <SecondaryButton
             text="Change"
@@ -52,36 +50,52 @@ const CPUArea: FC = () => {
     </div>
   );
 
-  const ChooseMode = () => (
-    <div className="cpu-area__choose">
-      <div className="cpu-area__choose__header">
-        <div className="cpu-area__choose__title">
-          <LeftOutlined
-            onClick={() => setMode(CPUAreaMode.Preview)}
-            className="cpu-area__choose__title__back-icon"
-          />
-          <div className="cpu-area__choose__title__text">Choose CPU</div>
+  const ChooseMode = () => {
+    const [cpus, setCpus] = useState<Array<CPUModel>>([]);
+
+    useEffect(() => {
+      getCpus().then((response) => {
+        setCpus(response.data);
+      });
+    }, []);
+
+    const handleCPUSelect = (cpu: CPUModel) => {
+      dispatch(setCPU(cpu));
+
+      setMode(CPUAreaMode.Preview);
+    };
+
+    return (
+      <div className="cpu-area__choose">
+        <div className="cpu-area__choose__header">
+          <div className="cpu-area__choose__title">
+            <LeftOutlined
+              onClick={() => setMode(CPUAreaMode.Preview)}
+              className="cpu-area__choose__title__back-icon"
+            />
+            <div className="cpu-area__choose__title__text">Choose CPU</div>
+          </div>
+          <SearchInput antInputProps={{ placeholder: 'search' }} />
         </div>
-        <SearchInput antInputProps={{ placeholder: 'search' }} />
+        <div className="cpu-area__choose__body">
+          <List
+            itemLayout="horizontal"
+            className="cpu-area__choose__body__list"
+            dataSource={cpus}
+            renderItem={(item) => (
+              <List.Item onClick={() => handleCPUSelect(item)}>
+                <List.Item.Meta
+                  avatar={<MacCommandOutlined />}
+                  title={item.displayName}
+                  description={`${item.cores}-core ${item.frequency}Hz`}
+                />
+              </List.Item>
+            )}
+          />
+        </div>
       </div>
-      <div className="cpu-area__choose__body">
-        <List
-          itemLayout="horizontal"
-          className="cpu-area__choose__body__list"
-          dataSource={cpus}
-          renderItem={(item) => (
-            <List.Item>
-              <List.Item.Meta
-                avatar={<MacCommandOutlined />}
-                title={item.displayName}
-                description={`${item.cores}-core ${item.frequency}Hz`}
-              />
-            </List.Item>
-          )}
-        />
-      </div>
-    </div>
-  );
+    );
+  };
 
   const renderMode = () => {
     switch (mode) {

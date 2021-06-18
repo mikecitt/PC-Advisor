@@ -1,3 +1,6 @@
+import { CPUModel } from 'services/cpu/cpu.model';
+import { MotherboardModel } from 'services/motherboard/motherboard.model';
+
 export const NEXT_STEP = 'compatibility/nextStep';
 export const PREVIOUS_STEP = 'compatibility/peviousStep';
 export const RESET = 'compatibility/reset';
@@ -6,13 +9,13 @@ export const SET_MOTHERBOARD = 'compatibility/setMotherboard';
 
 export interface CompatibilityState {
   step: number;
-  cpu: any;
+  cpu: CPUModel | null;
   motherboard: any;
 }
 
 const initialState: CompatibilityState = {
   step: 0,
-  cpu: undefined,
+  cpu: null,
   motherboard: undefined
 };
 
@@ -33,9 +36,19 @@ export function compatibilityReducer(
       };
     case RESET:
       return {
-        cpu: undefined,
+        cpu: null,
         motherboard: undefined,
         step: 0
+      };
+    case SET_CPU:
+      return {
+        ...state,
+        cpu: action.payload.cpu
+      };
+    case SET_MOTHERBOARD:
+      return {
+        ...state,
+        motherboard: action.payload.motherboard
       };
     default:
       return state;
@@ -56,12 +69,14 @@ interface ResetStepAction {
 
 interface SetCPUAction {
   type: typeof SET_CPU;
-  payload: any;
+  payload: {
+    cpu: CPUModel;
+  };
 }
 
 interface SetGPUMotherboardAction {
   type: typeof SET_MOTHERBOARD;
-  payload: any;
+  payload: { motherboard: MotherboardModel };
 }
 
 export type CompatibilityActionTypes =

@@ -1,4 +1,12 @@
-import { NEXT_STEP, PREVIOUS_STEP, RESET, SET_CPU } from './reducer';
+import { CPUModel } from 'services/cpu/cpu.model';
+import { MotherboardModel } from 'services/motherboard/motherboard.model';
+import {
+  NEXT_STEP,
+  PREVIOUS_STEP,
+  RESET,
+  SET_CPU,
+  SET_MOTHERBOARD
+} from './reducer';
 
 export const nextStep = () => {
   return {
@@ -18,16 +26,16 @@ export const reset = () => {
   };
 };
 
-export const setCPU = (cpu: any) => {
+export const setCPU = (cpu: CPUModel) => {
   return {
     type: SET_CPU,
-    payload: cpu
+    payload: { cpu }
   };
 };
 
-export const setMotherboard = (motherboard: any) => {
+export const setMotherboard = (motherboard: MotherboardModel) => {
   return {
-    type: RESET,
-    payload: motherboard
+    type: SET_MOTHERBOARD,
+    payload: { motherboard }
   };
 };

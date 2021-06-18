@@ -16,7 +16,7 @@ const CompatibilityTemplate: FC = () => {
         return <StartScreen />;
       case 1:
         return <ChooseComponentsScreen />;
-      case 3:
+      case 2:
         return <ResultScreen />;
       default:
         return <></>;

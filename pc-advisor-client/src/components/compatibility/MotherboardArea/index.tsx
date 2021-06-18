@@ -3,98 +3,120 @@ import { LeftOutlined, MacCommandOutlined } from '@ant-design/icons';
 import { List } from 'antd';
 
 import SecondaryButton from 'shared/SecondaryButton';
-import CPUImage from 'assets/icons/cpu.svg';
+import MotherboardImage from 'assets/icons/motherboard.svg';
 import SearchInput from 'shared/SearchInput';
-import { getCpus } from 'services/cpu/cpu.service';
-import { CPUModel } from 'services/cpu/cpu.model';
+import { MotherboardModel } from 'services/motherboard/motherboard.model';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from 'store';
+import { setMotherboard } from 'store/compatibility/actions';
+import { getMotherboards } from 'services/motherboard/motherboard.service';
 import './style.scss';
 
-enum CPUAreaMode {
+enum MotherboardAreaMode {
   Choose,
   Preview
 }
 
-const CPUArea: FC = () => {
-  const [cpus, setCpus] = useState<Array<CPUModel>>([]);
-
-  useEffect(() => {
-    getCpus().then((response) => {
-      setCpus(response.data);
-    });
-  }, []);
-
-  const [mode, setMode] = useState<CPUAreaMode>(CPUAreaMode.Choose);
-  const [allCPU, setAllCPU] = useState<Array<any>>([]);
+const MotherboardArea: FC = () => {
+  const dispatch = useDispatch();
+  const [mode, setMode] = useState<MotherboardAreaMode>(
+    MotherboardAreaMode.Choose
+  );
+  const selectedMotherboard = useSelector(
+    (state: RootState) => state.compatibility.motherboard
+  );
 
   const PreviewMode = () => (
-    <div className="cpu-area__preview">
-      <div className="cpu-area__preview__title">CPU</div>
-      <div className="cpu-area__preview__body">
-        <div className="cpu-area__preview__body__area">
-          <div className="cpu-area__preview__body__area__name">
-            AMD Ryzen 7 2800x 3.4hz asddas dasd
+    <div className="motherboard-area__preview">
+      <div className="motherboard-area__preview__title">Motherboard</div>
+      <div className="motherboard-area__preview__body">
+        <div className="motherboard-area__preview__body__area">
+          <div className="motherboard-area__preview__body__area__name">
+            {selectedMotherboard
+              ? selectedMotherboard.displayName
+              : 'None selected'}
           </div>
           <SecondaryButton
             text="Change"
             buttonProps={{
               onClick: () => {
-                setMode(CPUAreaMode.Choose);
+                setMode(MotherboardAreaMode.Choose);
               }
             }}
           />
         </div>
         <img
-          src={CPUImage}
-          alt="cpu"
-          className="cpu-area__preview__body__image"
+          src={MotherboardImage}
+          alt="motherboard"
+          className="motherboard-area__preview__body__image"
         />
       </div>
     </div>
   );
 
-  const ChooseMode = () => (
-    <div className="cpu-area__choose">
-      <div className="cpu-area__choose__header">
-        <div className="cpu-area__choose__title">
-          <LeftOutlined
-            onClick={() => setMode(CPUAreaMode.Preview)}
-            className="cpu-area__choose__title__back-icon"
-          />
-          <div className="cpu-area__choose__title__text">Choose CPU</div>
+  const ChooseMode = () => {
+    const [motherboards, setMotherboards] = useState<Array<MotherboardModel>>(
+      []
+    );
+
+    useEffect(() => {
+      getMotherboards().then((response) => {
+        setMotherboards(response.data);
+      });
+    }, []);
+
+    const handleMotherboardSelect = (motherboard: MotherboardModel) => {
+      dispatch(setMotherboard(motherboard));
+
+      setMode(MotherboardAreaMode.Preview);
+    };
+
+    return (
+      <div className="motherboard-area__choose">
+        <div className="motherboard-area__choose__header">
+          <div className="motherboard-area__choose__title">
+            <LeftOutlined
+              onClick={() => setMode(MotherboardAreaMode.Preview)}
+              className="motherboard-area__choose__title__back-icon"
+            />
+            <div className="motherboard-area__choose__title__text">
+              Choose Motherboard
+            </div>
+          </div>
+          <SearchInput antInputProps={{ placeholder: 'search' }} />
         </div>
-        <SearchInput antInputProps={{ placeholder: 'search' }} />
+        <div className="motherboard-area__choose__body">
+          <List
+            itemLayout="horizontal"
+            className="motherboard-area__choose__body__list"
+            dataSource={motherboards}
+            renderItem={(item) => (
+              <List.Item onClick={() => handleMotherboardSelect(item)}>
+                <List.Item.Meta
+                  avatar={<MacCommandOutlined />}
+                  title={item.displayName}
+                  description={`${item.price}€`}
+                />
+              </List.Item>
+            )}
+          />
+        </div>
       </div>
-      <div className="cpu-area__choose__body">
-        <List
-          itemLayout="horizontal"
-          className="cpu-area__choose__body__list"
-          dataSource={cpus}
-          renderItem={(item) => (
-            <List.Item>
-              <List.Item.Meta
-                avatar={<MacCommandOutlined />}
-                title={item.displayName}
-                description={`${item.cores}-core ${item.frequency}Hz`}
-              />
-            </List.Item>
-          )}
-        />
-      </div>
-    </div>
-  );
+    );
+  };
 
   const renderMode = () => {
     switch (mode) {
-      case CPUAreaMode.Preview:
+      case MotherboardAreaMode.Preview:
         return <PreviewMode />;
-      case CPUAreaMode.Choose:
+      case MotherboardAreaMode.Choose:
         return <ChooseMode />;
       default:
         return <></>;
     }
   };
 
-  return <div className="cpu-area">{renderMode()}</div>;
+  return <div className="motherboard-area">{renderMode()}</div>;
 };
 
-export default CPUArea;
+export default MotherboardArea;
