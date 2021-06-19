@@ -1,29 +1,79 @@
 import React, { FC } from 'react';
-import { useSelector } from 'react-redux';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 
-import { RootState } from 'store';
-import StartScreen from '../StartScreen';
-import ResultScreen from '../ResultScreen';
-import ChooseComponentsScreen from '../ChooseComponentsScreen';
+import {
+  SurveyQuestionModel,
+  SurveyQuestionModelDTO
+} from 'services/survey-question/survey-question.model';
+import { getSurveyQuestions } from 'services/survey-question/survey-question.service';
+import SecondaryButton from 'shared/SecondaryButton';
+import SectionTitle from 'shared/SectionTitle';
+import { nextSurveyStep, previousSurveyStep } from 'store/survey/actions';
+import Question from './Question';
 import './style.scss';
 
 const QuestionsScreen: FC = () => {
-  const step = useSelector((root: RootState) => root.compatibility.step);
+  const dispatch = useDispatch();
 
-  const renderSection = () => {
-    switch (step) {
-      case 0:
-        return <StartScreen />;
-      case 1:
-        return <ChooseComponentsScreen />;
-      case 2:
-        return <ResultScreen />;
-      default:
-        return <></>;
-    }
+  const [questions, setQuestions] = useState<Array<SurveyQuestionModel>>([]);
+  const [questionsDTO, setQuestionsDTO] = useState<
+    Array<SurveyQuestionModelDTO>
+  >([]);
+
+  const handlePrevious = () => {
+    dispatch(previousSurveyStep());
   };
 
-  return renderSection();
+  const handleContinue = () => {
+    dispatch(nextSurveyStep());
+  };
+
+  useEffect(() => {
+    getSurveyQuestions().then((response) => {
+      setQuestions(response.data);
+
+      setQuestionsDTO(
+        response.data.map((question) => {
+          return {
+            id: question.id,
+            score: null
+          };
+        })
+      );
+    });
+  }, []);
+
+  const handleStarChange = (id: number, score: number) => {
+    const quest = questionsDTO.find((question) => question.id === id);
+    if (quest) {
+      quest.score = score;
+    }
+    setQuestionsDTO(questionsDTO);
+  };
+
+  return (
+    <>
+      <SectionTitle
+        text="Answer Questions"
+        action={handlePrevious}
+        style={{ marginBottom: '64px' }}
+      />
+      <div className="questions-screen">
+        <div className="questions-screen__questions">
+          {questions.map((question) => (
+            <Question question={question} onStarChange={handleStarChange} />
+          ))}
+        </div>
+        <SecondaryButton
+          text="Next"
+          style={{ marginTop: '32px', alignSelf: 'flex-end' }}
+          buttonProps={{ onClick: handleContinue }}
+        />
+      </div>
+    </>
+  );
 };
 
 export default QuestionsScreen;

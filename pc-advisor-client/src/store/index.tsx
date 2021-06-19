@@ -3,9 +3,11 @@ import thunkMiddleware from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 import { compatibilityReducer } from './compatibility/reducer';
+import { surveyReducer } from './survey/reducer';
 
 const rootReducer = combineReducers({
-  compatibility: compatibilityReducer
+  compatibility: compatibilityReducer,
+  survey: surveyReducer
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

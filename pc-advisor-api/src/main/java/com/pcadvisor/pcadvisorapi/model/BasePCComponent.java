@@ -14,10 +14,10 @@ public class BasePCComponent extends BaseEntity {
     @NotBlank
     @Size(min = 3, max = 64)
     @Column(nullable = false)
-    private String displayName;
+    protected String displayName;
 
     @NotNull
-    private Float price; // in Euros
+    protected Float price; // in Euros
 
     @Override
     public String toString() {

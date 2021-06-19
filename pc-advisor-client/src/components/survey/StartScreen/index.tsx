@@ -3,23 +3,23 @@ import { useDispatch } from 'react-redux';
 
 import SecondaryButton from 'shared/SecondaryButton';
 import SectionTitle from 'shared/SectionTitle';
-import { nextCompatibilityStep } from 'store/compatibility/actions';
+import { nextSurveyStep } from 'store/survey/actions';
 import './style.scss';
 
 const StartScreen: FC = () => {
   const dispatch = useDispatch();
 
   const handleNext = () => {
-    dispatch(nextCompatibilityStep());
+    dispatch(nextSurveyStep());
   };
 
   return (
     <>
-      <SectionTitle text="Compatibility" style={{ marginBottom: '64px' }} />
+      <SectionTitle text="Survey" style={{ marginBottom: '64px' }} />
       <div className="start-screen">
         <div className="start-screen__text">
-          From here you can choose CPU and motherboard and check if they are
-          compatible
+          In the next sections you will be guided throw the flow of finding a
+          best PC for you
         </div>
         <SecondaryButton text="Start" buttonProps={{ onClick: handleNext }} />
       </div>

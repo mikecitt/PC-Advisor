@@ -1,0 +1,21 @@
+@import 'src/styles/partials/colors';
+
+.ttag {
+  background-color: white;
+  border-radius: 53px;
+  height: 57px;
+  padding: 16px 24px;
+  color: black;
+  font-size: 18px;
+  line-height: 25px;
+}
+
+.ttag:hover:not(.ant-tag-checkable-checked) {
+  border: 1px solid $brand-color;
+  color: black;
+}
+
+.ant-tag-checkable-checked {
+  background-color: $brand-color;
+  color: white;
+}

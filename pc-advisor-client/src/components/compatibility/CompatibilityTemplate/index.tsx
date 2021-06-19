@@ -5,7 +5,6 @@ import { RootState } from 'store';
 import StartScreen from '../StartScreen';
 import ResultScreen from '../ResultScreen';
 import ChooseComponentsScreen from '../ChooseComponentsScreen';
-import './style.scss';
 
 const CompatibilityTemplate: FC = () => {
   const step = useSelector((root: RootState) => root.compatibility.step);

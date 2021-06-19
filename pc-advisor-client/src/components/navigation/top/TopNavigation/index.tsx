@@ -18,11 +18,11 @@ const TopNavigation: FC = () => {
       <div>
         <Menu mode="horizontal" className="top-navigation__menu">
           <Menu.Item
-            key="find"
+            key="survey"
             icon={<FileSearchOutlined />}
-            className={pathname === '/find' ? 'ant-menu-item-selected' : ''}
+            className={pathname === '/survey' ? 'ant-menu-item-selected' : ''}
           >
-            <Link to="/find">Find</Link>
+            <Link to="/survey">Survey</Link>
           </Menu.Item>
           <Menu.Item
             key="build"

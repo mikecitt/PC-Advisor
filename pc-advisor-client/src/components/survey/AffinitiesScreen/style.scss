@@ -1,0 +1,9 @@
+.affinities-screen {
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+
+  & > * + * {
+    margin-top: 24px;
+  }
+}

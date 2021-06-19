@@ -1,0 +1,21 @@
+.questions-screen {
+  &__questions {
+    & > * + * {
+      margin-top: 32px;
+    }
+  }
+
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+}
+
+.question {
+  &__text {
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 22px;
+    color: #333333;
+    margin-bottom: 32px;
+  }
+}
