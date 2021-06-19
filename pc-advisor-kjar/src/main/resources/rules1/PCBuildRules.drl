@@ -138,7 +138,7 @@ rule "increase budget if no builds for budget"
 agenda-group "cpu-gpu-ram"
 salience 30
     when
-        $affinities: AffinitiesDTO($budget: budget != null)
+        $affinities: AffinitiesDTO($budget: budget != null && budget < 30000)
         Number(intValue == 0) from accumulate(
             PCBuild($t: this, getPrice() < $budget),
             count($t)
