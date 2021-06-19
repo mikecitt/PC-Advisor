@@ -136,6 +136,8 @@ public class SurveyService {
     List<PCBuild> objects = session.getObjects(pcBuildFilter).stream().map((obj) -> (PCBuild) obj)
         .collect(Collectors.toList());
 
+    objects.sort((o1, o2) -> o1.getPrice().compareTo(o2.getPrice()));
+
     return objects;
   }
 }
