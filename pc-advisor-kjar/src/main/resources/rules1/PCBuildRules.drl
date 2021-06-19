@@ -54,18 +54,6 @@ salience 100
         modify($pcBuild) { setRam($ram) };
     end
 
-/*
-rule "Delete builds without ram"
-agenda-group "cpu-gpu-ram"
-salience 90
-    when
-        pcBuild: PCBuild(ram == null)
-    then
-        System.out.println("deleteeee");
-        delete(pcBuild);
-    end
-*/
-
 rule "Power Supply choose"
 agenda-group "cpu-gpu-ram"
 no-loop true
