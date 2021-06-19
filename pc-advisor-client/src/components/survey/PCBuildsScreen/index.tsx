@@ -38,7 +38,11 @@ const AffinitiesScreen: FC = () => {
       />
       <div className="pc-builds-screen">
         {pcBuilds.map((pcBuild) => (
-          <PCBuild pcBuild={pcBuild} style={{ margin: '16px' }} />
+          <PCBuild
+            key={pcBuild.cpu.id}
+            pcBuild={pcBuild}
+            style={{ margin: '16px' }}
+          />
         ))}
       </div>
     </>

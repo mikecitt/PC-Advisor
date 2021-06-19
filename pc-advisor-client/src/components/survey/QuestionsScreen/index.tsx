@@ -32,7 +32,7 @@ const QuestionsScreen: FC = () => {
   };
 
   const handleContinue = () => {
-    setSurveyQuestions(questionsDTO);
+    dispatch(setSurveyQuestions(questionsDTO));
     dispatch(nextSurveyStep());
   };
 

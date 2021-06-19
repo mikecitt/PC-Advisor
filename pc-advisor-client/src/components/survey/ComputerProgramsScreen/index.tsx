@@ -36,7 +36,7 @@ const ComputerProgramsScreen: FC = () => {
   };
 
   const handleContinue = () => {
-    setSurveyComputerPrograms(computerProgramsDTO);
+    dispatch(setSurveyComputerPrograms(computerProgramsDTO));
     dispatch(nextSurveyStep());
   };
 

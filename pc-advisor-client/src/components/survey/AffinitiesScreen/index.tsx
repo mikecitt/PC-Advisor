@@ -42,7 +42,7 @@ const AffinitiesScreen: FC = () => {
   };
 
   const handleContinue = () => {
-    setSurveyAffinities({ brandPref, storageMin, budget });
+    dispatch(setSurveyAffinities({ brandPref, storageMin, budget }));
     dispatch(nextSurveyStep());
   };
 
