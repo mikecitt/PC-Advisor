@@ -119,9 +119,7 @@ public class SurveyService {
       session.insert(powerSupply);
     session.getAgenda().getAgendaGroup("computer-programs").setFocus();
     session.fireAllRules();
-    session.getAgenda().getAgendaGroup("cpu-gpu-ram").setFocus();
-    session.fireAllRules();
-    session.getAgenda().getAgendaGroup("finish").setFocus();
+    session.getAgenda().getAgendaGroup("priorities-to-builds").setFocus();
     session.fireAllRules();
     session.dispose();
     ObjectFilter pcBuildFilter = new ObjectFilter() {

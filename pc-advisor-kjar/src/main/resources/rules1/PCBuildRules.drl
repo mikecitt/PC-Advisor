@@ -16,8 +16,8 @@ import com.pcadvisor.pcadvisorapi.model.PCBuild;
 import com.pcadvisor.pcadvisorapi.drools.model.CpusGpus;
 import com.pcadvisor.pcadvisorapi.drools.model.CpuGpuPair;
 
-rule "CPU-GPU choose"
-agenda-group "cpu-gpu-ram"
+rule "P2-1-1 CPU-MB-GPU"
+agenda-group "priorities-to-builds"
 no-loop true
 salience 200
     when
@@ -29,8 +29,8 @@ salience 200
         insert(new PCBuild($cpu, $mb, $gpu));
     end
 
-rule "RAM choose"
-agenda-group "cpu-gpu-ram"
+rule "P2-1-2 RAM"
+agenda-group "priorities-to-builds"
 no-loop true
 salience 100
     when
@@ -54,8 +54,8 @@ salience 100
         modify($pcBuild) { setRam($ram) };
     end
 
-rule "Power Supply choose"
-agenda-group "cpu-gpu-ram"
+rule "P2-2-1 PSU"
+agenda-group "priorities-to-builds"
 no-loop true
 salience 80
     when
@@ -65,8 +65,8 @@ salience 80
         modify($pcBuild) {setPowerSupply($psu)};
     end
 
-rule "storageMin default set"
-agenda-group "cpu-gpu-ram"
+rule "P2-2-2 Storage undef"
+agenda-group "priorities-to-builds"
 no-loop true
 salience 75
     when
@@ -84,8 +84,8 @@ salience 75
         modify($affinities) { setStorageMin(size) };
     end
 
-rule "Hard drives choose only SSD"
-agenda-group "cpu-gpu-ram"
+rule "P2-2-3 SSD"
+agenda-group "priorities-to-builds"
 no-loop true
 salience 70
     when
@@ -103,8 +103,8 @@ salience 70
         modify($pcBuild) { getStorage().add($storage) };
     end
 
-rule "Hard drives choose both SSD and HDD"
-agenda-group "cpu-gpu-ram"
+rule "P2-2-4 SSD+HDD"
+agenda-group "priorities-to-builds"
 no-loop true
 salience 70
     when
@@ -126,8 +126,8 @@ salience 70
         modify($pcBuild) { getStorage().add($storageSSD), getStorage().add($storageHDD) };
     end
 
-rule "increase budget if no builds for budget"
-agenda-group "cpu-gpu-ram"
+rule "P2-2-5 Budget increase"
+agenda-group "priorities-to-builds"
 salience 30
     when
         $affinities: AffinitiesDTO($budget: budget != null && budget < 30000)
@@ -140,8 +140,8 @@ salience 30
         System.out.println("Povecavam budzet za 100e, sada je: " + $affinities.getBudget());
     end
 
-rule "delete expensive builds"
-agenda-group "cpu-gpu-ram"
+rule "P2-2-6 Remove expensive"
+agenda-group "priorities-to-builds"
 salience 20
     when
         $affinities: AffinitiesDTO($budget: budget != null)
@@ -154,8 +154,8 @@ salience 20
         delete($pcBuild);
     end
 
-rule "brand pref"
-agenda-group "cpu-gpu-ram"
+rule "P2-2-7 Brand Pref"
+agenda-group "priorities-to-builds"
 salience 10
     when
         AffinitiesDTO($brandPref: brandPref != null) 
