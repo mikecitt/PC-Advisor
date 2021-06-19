@@ -36,8 +36,9 @@ salience 100
     when
         $pcBuild: PCBuild($cpu: cpu)
         priorityDTO: PriorityDTO($ramPriority: ramPriority)
+
         Number($minSize : intValue ) from accumulate(
-            RAM($size : size, $size >= ($ramPriority * 8 / 4)), min($size)
+            RAM($size : size >= ($ramPriority * 2)), min($size)
         )
         (
             $ram: RAM(size == $minSize, ramType == RamType.KIT)
@@ -53,14 +54,17 @@ salience 100
         modify($pcBuild) { setRam($ram) };
     end
 
+/*
 rule "Delete builds without ram"
 agenda-group "cpu-gpu-ram"
 salience 90
     when
         pcBuild: PCBuild(ram == null)
     then
+        System.out.println("deleteeee");
         delete(pcBuild);
     end
+*/
 
 rule "Power Supply choose"
 agenda-group "cpu-gpu-ram"

@@ -1,11 +1,9 @@
 package com.pcadvisor.pcadvisorapi.service;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.pcadvisor.pcadvisorapi.drools.model.SurveyQuestionScores;
-import com.pcadvisor.pcadvisorapi.dto.AffinitiesDTO;
 import com.pcadvisor.pcadvisorapi.dto.ComputerProgramRequestDTO;
 import com.pcadvisor.pcadvisorapi.dto.ComputerProgramsResponseDTO;
 import com.pcadvisor.pcadvisorapi.dto.PriorityDTO;
@@ -31,8 +29,6 @@ import org.drools.core.ObjectFilter;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
