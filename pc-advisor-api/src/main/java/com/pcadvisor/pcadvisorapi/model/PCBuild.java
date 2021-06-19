@@ -21,7 +21,13 @@ public class PCBuild {
     }
 
     public Float getPrice() {
-        return (cpu == null ? 0 : cpu.getPrice()) + (gpu == null ? 0 : gpu.getPrice()) + (motherboard == null ? 0 : motherboard.getPrice()) + (powerSupply == null ? 0 : powerSupply.getPrice()) + (ram == null ? 0 : ram.getPrice());
+        Float storagePrice = null;
+        if(storage.size() > 0) {
+            storagePrice = (float) 0;
+            for(Storage s : storage)
+                storagePrice += s.getPrice();
+        }
+        return (cpu == null ? 0 : cpu.getPrice()) + (gpu == null ? 0 : gpu.getPrice()) + (motherboard == null ? 0 : motherboard.getPrice()) + (powerSupply == null ? 0 : powerSupply.getPrice()) + (ram == null ? 0 : ram.getPrice()) + (storagePrice == null ? 0 : storagePrice);
     } 
 
     public Integer getPowerUsage() {

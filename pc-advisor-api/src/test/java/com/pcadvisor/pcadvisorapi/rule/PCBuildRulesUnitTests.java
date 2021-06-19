@@ -118,7 +118,7 @@ public class PCBuildRulesUnitTests {
         KieSession session = kieContainer.newKieSession("rulesSession");
 
         PriorityDTO priorityDTO = new PriorityDTO(5, 5, 5);
-        AffinitiesDTO affinitiesDTO = new AffinitiesDTO(CPUBrand.INTEL, 450, 1040);
+        AffinitiesDTO affinitiesDTO = new AffinitiesDTO(CPUBrand.INTEL, 450, 1140);
         List<CPU> cpus = cpuRepository.findAll();
         List<GPU> gpus = gpuRepository.findAll();
         List<RAM> rams = ramRepository.findAll();
