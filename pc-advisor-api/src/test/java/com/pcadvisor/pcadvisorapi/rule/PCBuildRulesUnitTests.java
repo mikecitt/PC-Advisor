@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import com.pcadvisor.pcadvisorapi.dto.AffinitiesDTO;
 import com.pcadvisor.pcadvisorapi.dto.PriorityDTO;
 import com.pcadvisor.pcadvisorapi.model.CPU;
@@ -59,11 +61,12 @@ public class PCBuildRulesUnitTests {
     private KieSession session;
 
     @Test
+    @Transactional
     public void testGetBuilds() {
         KieSession session = kieContainer.newKieSession("rulesSession");
 
-        PriorityDTO priorityDTO = new PriorityDTO(5, 5, 5);
-        AffinitiesDTO affinitiesDTO = new AffinitiesDTO(null, null, 900);
+        PriorityDTO priorityDTO = new PriorityDTO(5, 5, 9);
+        AffinitiesDTO affinitiesDTO = new AffinitiesDTO(null, null, 1050);
         List<CPU> cpus = cpuRepository.findAll();
         List<GPU> gpus = gpuRepository.findAll();
         List<RAM> rams = ramRepository.findAll();
@@ -109,6 +112,7 @@ public class PCBuildRulesUnitTests {
     }
 
     @Test
+    @Transactional
     public void testGetBuildsBrandPref() {
         KieSession session = kieContainer.newKieSession("rulesSession");
 
@@ -119,6 +123,7 @@ public class PCBuildRulesUnitTests {
         List<RAM> rams = ramRepository.findAll();
         List<Motherboard> motherboards = motherboardRepository.findAll();
         List<PowerSupply> powerSupplies = powerSupplyRepository.findAll();
+        List<Storage> storages = storageRepository.findAll();
         session.insert(priorityDTO);
         session.insert(affinitiesDTO);
         for(CPU cpu : cpus)
@@ -131,6 +136,8 @@ public class PCBuildRulesUnitTests {
             session.insert(motherboard);
         for(PowerSupply powerSupply: powerSupplies)
             session.insert(powerSupply);
+        for(Storage storage: storages)
+            session.insert(storage);
         session.getAgenda().getAgendaGroup("cpu-gpu-ram").setFocus();
         session.fireAllRules();
         session.getAgenda().getAgendaGroup("finish").setFocus();
@@ -156,10 +163,11 @@ public class PCBuildRulesUnitTests {
     }
 
     @Test
+    @Transactional
     public void testNotEnoughBudget() {
         KieSession session = kieContainer.newKieSession("rulesSession");
 
-        PriorityDTO priorityDTO = new PriorityDTO(5, 5, 7);
+        PriorityDTO priorityDTO = new PriorityDTO(6, 6, 7);
         AffinitiesDTO affinitiesDTO = new AffinitiesDTO(CPUBrand.AMD, 450, 300);
         Integer initBudget = affinitiesDTO.getBudget();
         List<CPU> cpus = cpuRepository.findAll();
@@ -167,6 +175,7 @@ public class PCBuildRulesUnitTests {
         List<RAM> rams = ramRepository.findAll();
         List<Motherboard> motherboards = motherboardRepository.findAll();
         List<PowerSupply> powerSupplies = powerSupplyRepository.findAll();
+        List<Storage> storages = storageRepository.findAll();
         session.insert(priorityDTO);
         session.insert(affinitiesDTO);
         for(CPU cpu : cpus)
@@ -179,16 +188,35 @@ public class PCBuildRulesUnitTests {
             session.insert(motherboard);
         for(PowerSupply powerSupply: powerSupplies)
             session.insert(powerSupply);
+        for(Storage storage: storages)
+            session.insert(storage);
         session.getAgenda().getAgendaGroup("cpu-gpu-ram").setFocus();
         session.fireAllRules();
         session.getAgenda().getAgendaGroup("finish").setFocus();
         session.fireAllRules();
+
+        ObjectFilter pcBuildFilter = new ObjectFilter() {
+
+            @Override
+            public boolean accept(Object object) {
+                if (PCBuild.class.equals(object.getClass()))
+                    return true;
+                if (PCBuild.class.equals(object.getClass().getSuperclass()))
+                    return true;
+                return false;
+            }
+        };
+        Collection<?> objects = session.getObjects(pcBuildFilter);
+        for (Iterator i = objects.iterator(); i.hasNext(); )
+            System.out.println(i.next());
+
         session.dispose();
         Assert.assertTrue(initBudget < affinitiesDTO.getBudget());
         
     }
 
     @Test
+    @Transactional
     public void testPSUChoose() {
         session = kieContainer.newKieSession("rulesSession");
         CPU cpu = cpuRepository.findById(1L).orElseGet(null);
@@ -206,6 +234,7 @@ public class PCBuildRulesUnitTests {
     }
 
     @Test
+    @Transactional
     public void testRAMChooseAMD() {
         session = kieContainer.newKieSession("rulesSession");
         CPU cpu = cpuRepository.findById(1L).orElseGet(null);
@@ -226,6 +255,7 @@ public class PCBuildRulesUnitTests {
     }
 
     @Test
+    @Transactional
     public void testRAMChooseINTEL() {
         session = kieContainer.newKieSession("rulesSession");
         CPU cpu = cpuRepository.findById(2L).orElseGet(null);
@@ -246,6 +276,7 @@ public class PCBuildRulesUnitTests {
     }
 
     @Test
+    @Transactional
     public void testStorageChooseNoParams() {
         session = kieContainer.newKieSession("rulesSession");
         CPU cpu = cpuRepository.findById(2L).orElseGet(null);
@@ -264,6 +295,7 @@ public class PCBuildRulesUnitTests {
     }
 
     @Test
+    @Transactional
     public void testStorageChooseSSD() {
         session = kieContainer.newKieSession("rulesSession");
         CPU cpu = cpuRepository.findById(2L).orElseGet(null);
@@ -284,6 +316,7 @@ public class PCBuildRulesUnitTests {
     }
 
     @Test
+    @Transactional
     public void testStorageChooseSSDandHDD() {
         session = kieContainer.newKieSession("rulesSession");
         CPU cpu = cpuRepository.findById(2L).orElseGet(null);
