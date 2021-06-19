@@ -5,6 +5,8 @@ import java.util.List;
 import com.pcadvisor.pcadvisorapi.dto.CompatibilityRequestDTO;
 import com.pcadvisor.pcadvisorapi.dto.CompatibilityResponseDTO;
 import com.pcadvisor.pcadvisorapi.dto.FindAllMotherboardsRequestDTO;
+import com.pcadvisor.pcadvisorapi.dto.SearchRequestDTO;
+import com.pcadvisor.pcadvisorapi.dto.SearchResponseDTO;
 import com.pcadvisor.pcadvisorapi.model.Motherboard;
 import com.pcadvisor.pcadvisorapi.service.CompatibilityService;
 
@@ -31,5 +33,10 @@ public class CompatibilityController {
     @PostMapping("/find-motherboards")
     public ResponseEntity<List<Motherboard>> findAllMotherboards(@RequestBody FindAllMotherboardsRequestDTO request) {
         return new ResponseEntity<>(compatibilityService.findAllMotherboards(request), HttpStatus.OK);
+    }
+
+    @PostMapping("/check-same-cores")
+    public ResponseEntity<SearchResponseDTO> checkSameCores(@RequestBody SearchRequestDTO request) {
+        return new ResponseEntity<>(compatibilityService.checkSameCores(request), HttpStatus.OK);
     }
 }

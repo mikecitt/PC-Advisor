@@ -9,6 +9,8 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.NotNull;
 
+import org.kie.api.definition.type.Position;
+
 import lombok.Data;
 import lombok.ToString;
 
@@ -16,9 +18,11 @@ import lombok.ToString;
 @Entity
 @ToString
 public class CPU extends BasePCComponentPowered {
+    @Position(0)
     @Enumerated(EnumType.STRING)
     @NotNull
     private CPUBrand cpuBrand;
+    @Position(1)
     @NotNull
     private Integer cores;
     @NotNull

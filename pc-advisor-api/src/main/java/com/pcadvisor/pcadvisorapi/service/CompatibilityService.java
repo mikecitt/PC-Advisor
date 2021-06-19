@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 
 import com.pcadvisor.pcadvisorapi.dto.FindAllMotherboardsRequestDTO;
+import com.pcadvisor.pcadvisorapi.dto.SearchRequestDTO;
+import com.pcadvisor.pcadvisorapi.dto.SearchResponseDTO;
 import com.pcadvisor.pcadvisorapi.dto.CompatibilityRequestDTO;
 import com.pcadvisor.pcadvisorapi.dto.CompatibilityResponseDTO;
 import com.pcadvisor.pcadvisorapi.exception.CPUNotFoundException;
@@ -81,5 +83,24 @@ public class CompatibilityService {
 
     session.dispose();
     return motherboards;
+  }
+
+  public SearchResponseDTO checkSameCores(SearchRequestDTO request) {
+
+    SearchResponseDTO response = new SearchResponseDTO();
+
+    KieSession session = kieContainer.newKieSession("rulesSession");
+    for (CPU cpu : cpuService.findAll()) {
+      session.insert(cpu);
+    }
+    session.insert(request.getCpuBrand());
+    session.insert(request.getCores());
+    session.setGlobal("searchResponse", response);
+    session.getAgenda().getAgendaGroup("cores-equal").setFocus();
+    session.fireAllRules();
+    session.dispose();
+
+    session.dispose();
+    return response;
   }
 }
