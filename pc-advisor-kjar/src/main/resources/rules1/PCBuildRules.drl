@@ -29,19 +29,26 @@ salience 200
         insert(new PCBuild($cpu, $mb, $gpu));
     end
 
-/*rule "brand pref"
+/*
+rule "brand pref"
 agenda-group "cpu-gpu-ram"
 no-loop true
 salience 150
     when
         AffinitiesDTO($brandPref: brandPref != null) 
-        Number(intValue == 0) from accumulate(
-            PCBuild($t: this, $cpu: cpu),
+        Number($br: intValue > 0) from accumulate(
+            PCBuild($t: this, $cpu: cpu) 
+            and
+            CPU(cpuBrand == $brandPref) from $cpu,
             count($t)
         )
+        $build: PCBuild($cpu1: cpu)
+        $cpu: CPU(cpuBrand != $brandPref) from $build
     then
-        System.out.println("tu sam");
-    end*/
+        System.out.println("brisem --> " + $build);
+        delete($build);
+    end
+*/
 
 rule "RAM choose"
 agenda-group "cpu-gpu-ram"
