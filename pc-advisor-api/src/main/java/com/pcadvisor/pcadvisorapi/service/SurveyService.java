@@ -1,19 +1,37 @@
 package com.pcadvisor.pcadvisorapi.service;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.pcadvisor.pcadvisorapi.drools.model.SurveyQuestionScores;
-import com.pcadvisor.pcadvisorapi.dto.ComputerProgramRequestDTO;
-import com.pcadvisor.pcadvisorapi.dto.ComputerProgramsRequestDTO;
+import com.pcadvisor.pcadvisorapi.dto.AffinitiesDTO;
 import com.pcadvisor.pcadvisorapi.dto.ComputerProgramsResponseDTO;
 import com.pcadvisor.pcadvisorapi.dto.PriorityDTO;
 import com.pcadvisor.pcadvisorapi.dto.SurveyQuestionRequestDTO;
 import com.pcadvisor.pcadvisorapi.dto.SurveyQuestionsDTO;
-import com.pcadvisor.pcadvisorapi.dto.UsageAreasDTO;
+import com.pcadvisor.pcadvisorapi.dto.SurveyRequestDTO;
+import com.pcadvisor.pcadvisorapi.model.CPU;
 import com.pcadvisor.pcadvisorapi.model.ComputerProgram;
+import com.pcadvisor.pcadvisorapi.model.GPU;
+import com.pcadvisor.pcadvisorapi.model.Motherboard;
+import com.pcadvisor.pcadvisorapi.model.PCBuild;
+import com.pcadvisor.pcadvisorapi.model.PowerSupply;
+import com.pcadvisor.pcadvisorapi.model.RAM;
+import com.pcadvisor.pcadvisorapi.model.Storage;
 import com.pcadvisor.pcadvisorapi.model.SurveyQuestion;
+import com.pcadvisor.pcadvisorapi.repository.GPURepository;
+import com.pcadvisor.pcadvisorapi.repository.MotherboardRepository;
+import com.pcadvisor.pcadvisorapi.repository.PowerSupplyRepository;
+import com.pcadvisor.pcadvisorapi.repository.RAMRepository;
+import com.pcadvisor.pcadvisorapi.repository.StorageRepository;
 
+import org.drools.core.ObjectFilter;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -28,6 +46,24 @@ public class SurveyService {
 
   @Autowired
   private SurveyQuestionService surveyQuestionService;
+
+  @Autowired
+  private CPUService cpuService;
+
+  @Autowired
+  private GPURepository gpuRepository;
+
+  @Autowired
+  private PowerSupplyRepository powerSupplyRepository;
+
+  @Autowired
+  private MotherboardRepository motherboardRepository;
+
+  @Autowired
+  private RAMRepository ramRepository;
+
+  @Autowired
+  private StorageRepository storageRepository;
 
   public ComputerProgramsResponseDTO submitQuestions(@RequestBody SurveyQuestionsDTO request) {
 
@@ -54,34 +90,52 @@ public class SurveyService {
     return response;
   }
 
-  public PriorityDTO submitComputerPrograms(@RequestBody ComputerProgramsRequestDTO request) {
-
-    PriorityDTO response = new PriorityDTO(0, 0, 0);
+  public List<PCBuild> submitSurvey(SurveyRequestDTO request) {
 
     KieSession session = kieContainer.newKieSession("rulesSession");
-    session.insert(response);
-    for (ComputerProgramRequestDTO program : request.getComputerPrograms()) {
-      session.insert(program);
-    }
+
+    PriorityDTO priorityDTO = new PriorityDTO(5, 5, 5);
+    AffinitiesDTO affinitiesDTO = new AffinitiesDTO(null, null, 900);
+    List<CPU> cpus = cpuService.findAll();
+    List<GPU> gpus = gpuRepository.findAll();
+    List<RAM> rams = ramRepository.findAll();
+    List<Storage> storages = storageRepository.findAll();
+    List<Motherboard> motherboards = motherboardRepository.findAll();
+    List<PowerSupply> powerSupplies = powerSupplyRepository.findAll();
+    session.insert(priorityDTO);
+    session.insert(affinitiesDTO);
+    for (CPU cpu : cpus)
+      session.insert(cpu);
+    for (GPU gpu : gpus)
+      session.insert(gpu);
+    for (RAM ram : rams)
+      session.insert(ram);
+    for (Storage storage : storages)
+      session.insert(storage);
+    for (Motherboard motherboard : motherboards)
+      session.insert(motherboard);
+    for (PowerSupply powerSupply : powerSupplies)
+      session.insert(powerSupply);
+    session.getAgenda().getAgendaGroup("cpu-gpu-ram").setFocus();
     session.fireAllRules();
-    session.dispose();
-
-    return response;
-  }
-
-  public ComputerProgramsResponseDTO submitUsageArea(@RequestBody UsageAreasDTO request) {
-
-    ComputerProgramsResponseDTO response = new ComputerProgramsResponseDTO();
-
-    KieSession session = kieContainer.newKieSession("rulesSession");
-    session.insert(request);
-    session.insert(response);
-    for (ComputerProgram program : computerProgramService.findAll()) {
-      session.insert(program);
-    }
+    session.getAgenda().getAgendaGroup("finish").setFocus();
     session.fireAllRules();
-    session.dispose();
 
-    return response;
+    ObjectFilter pcBuildFilter = new ObjectFilter() {
+
+      @Override
+      public boolean accept(Object object) {
+        if (PCBuild.class.equals(object.getClass()))
+          return true;
+        if (PCBuild.class.equals(object.getClass().getSuperclass()))
+          return true;
+        return false;
+      }
+    };
+    List<PCBuild> objects = session.getObjects(pcBuildFilter).stream().map((obj) -> (PCBuild) obj)
+        .collect(Collectors.toList());
+
+    session.dispose();
+    return objects;
   }
 }

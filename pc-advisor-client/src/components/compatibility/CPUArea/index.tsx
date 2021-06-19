@@ -67,15 +67,12 @@ const CPUArea: FC = () => {
 
     return (
       <div className="cpu-area__choose">
-        <div className="cpu-area__choose__header">
-          <div className="cpu-area__choose__title">
-            <LeftOutlined
-              onClick={() => setMode(CPUAreaMode.Preview)}
-              className="cpu-area__choose__title__back-icon"
-            />
-            <div className="cpu-area__choose__title__text">Choose CPU</div>
-          </div>
-          <SearchInput antInputProps={{ placeholder: 'search' }} />
+        <div className="cpu-area__choose__title">
+          <LeftOutlined
+            onClick={() => setMode(CPUAreaMode.Preview)}
+            className="cpu-area__choose__title__back-icon"
+          />
+          <div className="cpu-area__choose__title__text">Choose CPU</div>
         </div>
         <div className="cpu-area__choose__body">
           <List

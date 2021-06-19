@@ -73,17 +73,14 @@ const MotherboardArea: FC = () => {
 
     return (
       <div className="motherboard-area__choose">
-        <div className="motherboard-area__choose__header">
-          <div className="motherboard-area__choose__title">
-            <LeftOutlined
-              onClick={() => setMode(MotherboardAreaMode.Preview)}
-              className="motherboard-area__choose__title__back-icon"
-            />
-            <div className="motherboard-area__choose__title__text">
-              Choose Motherboard
-            </div>
+        <div className="motherboard-area__choose__title">
+          <LeftOutlined
+            onClick={() => setMode(MotherboardAreaMode.Preview)}
+            className="motherboard-area__choose__title__back-icon"
+          />
+          <div className="motherboard-area__choose__title__text">
+            Choose Motherboard
           </div>
-          <SearchInput antInputProps={{ placeholder: 'search' }} />
         </div>
         <div className="motherboard-area__choose__body">
           <List

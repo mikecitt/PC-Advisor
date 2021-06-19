@@ -10,7 +10,11 @@ import {
 import { getSurveyQuestions } from 'services/survey-question/survey-question.service';
 import SecondaryButton from 'shared/SecondaryButton';
 import SectionTitle from 'shared/SectionTitle';
-import { nextSurveyStep, previousSurveyStep } from 'store/survey/actions';
+import {
+  nextSurveyStep,
+  previousSurveyStep,
+  setSurveyQuestions
+} from 'store/survey/actions';
 import Question from './Question';
 import './style.scss';
 
@@ -21,12 +25,14 @@ const QuestionsScreen: FC = () => {
   const [questionsDTO, setQuestionsDTO] = useState<
     Array<SurveyQuestionModelDTO>
   >([]);
+  const [canContinue, setCanContinue] = useState<boolean>(false);
 
   const handlePrevious = () => {
     dispatch(previousSurveyStep());
   };
 
   const handleContinue = () => {
+    setSurveyQuestions(questionsDTO);
     dispatch(nextSurveyStep());
   };
 
@@ -45,12 +51,16 @@ const QuestionsScreen: FC = () => {
     });
   }, []);
 
+  useEffect(() => {
+    setCanContinue(questionsDTO.every((question) => question.score !== null));
+  }, [questionsDTO]);
+
   const handleStarChange = (id: number, score: number) => {
     const quest = questionsDTO.find((question) => question.id === id);
     if (quest) {
       quest.score = score;
     }
-    setQuestionsDTO(questionsDTO);
+    setQuestionsDTO([...questionsDTO]);
   };
 
   return (
@@ -63,13 +73,17 @@ const QuestionsScreen: FC = () => {
       <div className="questions-screen">
         <div className="questions-screen__questions">
           {questions.map((question) => (
-            <Question question={question} onStarChange={handleStarChange} />
+            <Question
+              key={question.id}
+              question={question}
+              onStarChange={handleStarChange}
+            />
           ))}
         </div>
         <SecondaryButton
           text="Next"
           style={{ marginTop: '32px', alignSelf: 'flex-end' }}
-          buttonProps={{ onClick: handleContinue }}
+          buttonProps={{ onClick: handleContinue, disabled: !canContinue }}
         />
       </div>
     </>

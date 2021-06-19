@@ -8,16 +8,21 @@ const { CheckableTag } = Tag;
 
 interface TTagProps extends BaseProps {
   text?: string;
-  antTagProps?: TagProps;
+  onChange?: (checked: boolean) => void;
 }
 
-const TTag: FC<TTagProps> = ({ text, antTagProps, style }) => {
+const TTag: FC<TTagProps> = ({ text, style, onChange }) => {
   const [checked, setChecked] = React.useState<boolean>(false);
+
+  const handleOnChange = (checked: boolean) => {
+    setChecked(checked);
+    onChange && onChange(checked);
+  };
 
   return (
     <CheckableTag
+      onChange={handleOnChange}
       checked={checked}
-      onChange={(value: boolean) => setChecked(value)}
       className="ttag"
       style={style}
     >

@@ -2,15 +2,19 @@ import React, { FC } from 'react';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { ComputerProgramModelDTO } from 'services/computer-program/computer-program-dto.model';
 
-import { getComputerPrograms } from 'services/computer-program/computer-program.service';
 import { ComputerProgramModel } from 'services/computer-program/cumputer-program.model';
 import { submitQuestions } from 'services/survey/survey.service';
 import PTag from 'shared/PTag';
 import SecondaryButton from 'shared/SecondaryButton';
 import SectionTitle from 'shared/SectionTitle';
 import { RootState } from 'store';
-import { nextSurveyStep, previousSurveyStep } from 'store/survey/actions';
+import {
+  nextSurveyStep,
+  previousSurveyStep,
+  setSurveyComputerPrograms
+} from 'store/survey/actions';
 import './style.scss';
 
 const ComputerProgramsScreen: FC = () => {
@@ -22,18 +26,38 @@ const ComputerProgramsScreen: FC = () => {
   const [computerPrograms, setComputerPrograms] = useState<
     Array<ComputerProgramModel>
   >([]);
+  const [computerProgramsDTO, setComputerProgramsDTO] = useState<
+    Array<ComputerProgramModelDTO>
+  >([]);
+  const [canContinue, setCanContinue] = useState<boolean>(false);
 
   const handlePrevious = () => {
     dispatch(previousSurveyStep());
   };
 
   const handleContinue = () => {
+    setSurveyComputerPrograms(computerProgramsDTO);
     dispatch(nextSurveyStep());
   };
 
   useEffect(() => {
+    setCanContinue(computerProgramsDTO.length > 0);
+  }, [computerProgramsDTO]);
+
+  const handleProgramSelected = (id: number, value: boolean) => {
+    if (value) {
+      const newProgramsDTO = [...computerProgramsDTO];
+      newProgramsDTO.push({ id });
+      setComputerProgramsDTO(newProgramsDTO);
+    } else {
+      setComputerProgramsDTO(
+        computerProgramsDTO.filter((program) => program.id !== id)
+      );
+    }
+  };
+
+  useEffect(() => {
     submitQuestions(questionsDTO).then((response) => {
-      console.log(response);
       setComputerPrograms(response.data.computerPrograms);
     });
   }, []);
@@ -49,7 +73,11 @@ const ComputerProgramsScreen: FC = () => {
         <div className="computer-programs-screen__computer-programs">
           {computerPrograms.map((computerProgram) => (
             <PTag
+              key={computerProgram.id}
               text={computerProgram.displayName}
+              onChange={(checked) =>
+                handleProgramSelected(computerProgram.id, checked)
+              }
               style={{ marginTop: '12px', marginBottom: '12px' }}
             />
           ))}
@@ -57,7 +85,7 @@ const ComputerProgramsScreen: FC = () => {
         <SecondaryButton
           text="Next"
           style={{ marginTop: '32px', alignSelf: 'flex-end' }}
-          buttonProps={{ onClick: handleContinue }}
+          buttonProps={{ onClick: handleContinue, disabled: !canContinue }}
         />
       </div>
     </>

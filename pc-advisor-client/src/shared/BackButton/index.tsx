@@ -21,7 +21,7 @@ const BackButton: FC<BackButtonProps> = ({ antButtonProps, style }) => (
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
-        <path d="M10 1L2 9L10 17" stroke="#183a86" stroke-width="1.5" />
+        <path d="M10 1L2 9L10 17" stroke="#183a86" strokeWidth="1.5" />
       </svg>
     }
     {...antButtonProps}
