@@ -3,6 +3,7 @@ import com.pcadvisor.pcadvisorapi.dto.ComputerProgramRequestDTO;
 import com.pcadvisor.pcadvisorapi.dto.PriorityDTO;
 
 rule "Computer Program 10"
+agenda-group "computer-programs"
 lock-on-active true
 when
     $computerProgram: ComputerProgramRequestDTO(id == 10)
@@ -14,6 +15,7 @@ then
 end
 
 rule "Computer Program 9"
+agenda-group "computer-programs"
 lock-on-active true
 when
     $computerProgram: ComputerProgramRequestDTO(id == 9)
@@ -25,6 +27,7 @@ then
 end
 
 rule "Computer Program 8"
+agenda-group "computer-programs"
 lock-on-active true
 when
     $computerProgram: ComputerProgramRequestDTO(id == 8)
@@ -36,6 +39,7 @@ then
 end
 
 rule "Computer Program 7"
+agenda-group "computer-programs"
 lock-on-active true
 when
     $computerProgram: ComputerProgramRequestDTO(id == 7)
@@ -47,6 +51,7 @@ then
 end
 
 rule "Computer Program 6"
+agenda-group "computer-programs"
 lock-on-active true
 when
     $computerProgram: ComputerProgramRequestDTO(id == 6)
@@ -58,6 +63,7 @@ then
 end
 
 rule "Computer Program 5"
+agenda-group "computer-programs"
 lock-on-active true
 when
     $computerProgram: ComputerProgramRequestDTO(id == 5)
@@ -69,6 +75,7 @@ then
 end
 
 rule "Computer Program 4"
+agenda-group "computer-programs"
 lock-on-active true
 when
     $computerProgram: ComputerProgramRequestDTO(id == 4)
@@ -80,6 +87,7 @@ then
 end
 
 rule "Computer Program 3"
+agenda-group "computer-programs"
 lock-on-active true
 when
     $computerProgram: ComputerProgramRequestDTO(id == 3)
@@ -91,6 +99,7 @@ then
 end
 
 rule "Computer Program 2"
+agenda-group "computer-programs"
 lock-on-active true
 when
     $computerProgram: ComputerProgramRequestDTO(id == 2)
@@ -102,6 +111,7 @@ then
 end
 
 rule "Computer Program 1"
+agenda-group "computer-programs"
 lock-on-active true
 when
     $computerProgram: ComputerProgramRequestDTO(id == 1)
@@ -113,6 +123,7 @@ then
 end
 
 rule "Priority Reduce"
+agenda-group "computer-programs"
 salience 50
     when
         $priorityDTO: PriorityDTO(cpuPriority + gpuPriority + ramPriority >= 20)
@@ -123,6 +134,7 @@ salience 50
     end
 
 rule "CPU Reduce"
+agenda-group "computer-programs"
 salience 50
     when
         $priorityDTO: PriorityDTO(cpuPriority >= 10)
@@ -131,6 +143,7 @@ salience 50
     end
 
 rule "GPU Reduce"
+agenda-group "computer-programs"
 salience 50
    when
        $priorityDTO: PriorityDTO(gpuPriority >= 10)
@@ -139,6 +152,7 @@ salience 50
    end
 
 rule "RAM Reduce"
+agenda-group "computer-programs"
 salience 50
     when
         $priorityDTO: PriorityDTO(ramPriority >= 10)

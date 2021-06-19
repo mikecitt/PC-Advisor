@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import com.pcadvisor.pcadvisorapi.drools.model.SurveyQuestionScores;
 import com.pcadvisor.pcadvisorapi.dto.AffinitiesDTO;
+import com.pcadvisor.pcadvisorapi.dto.ComputerProgramRequestDTO;
 import com.pcadvisor.pcadvisorapi.dto.ComputerProgramsResponseDTO;
 import com.pcadvisor.pcadvisorapi.dto.PriorityDTO;
 import com.pcadvisor.pcadvisorapi.dto.SurveyQuestionRequestDTO;
@@ -94,16 +95,20 @@ public class SurveyService {
 
     KieSession session = kieContainer.newKieSession("rulesSession");
 
-    PriorityDTO priorityDTO = new PriorityDTO(5, 5, 5);
-    AffinitiesDTO affinitiesDTO = new AffinitiesDTO(null, null, 900);
+    PriorityDTO priorityDTO = new PriorityDTO(0, 0, 0);
+
     List<CPU> cpus = cpuService.findAll();
     List<GPU> gpus = gpuRepository.findAll();
     List<RAM> rams = ramRepository.findAll();
     List<Storage> storages = storageRepository.findAll();
     List<Motherboard> motherboards = motherboardRepository.findAll();
     List<PowerSupply> powerSupplies = powerSupplyRepository.findAll();
+    session.insert(request.getAffinitiesDTO());
     session.insert(priorityDTO);
-    session.insert(affinitiesDTO);
+    for (ComputerProgramRequestDTO program : request.getComputerProgramsRequestDTO().getComputerPrograms())
+      session.insert(program);
+    for (CPU cpu : cpus)
+      session.insert(cpu);
     for (CPU cpu : cpus)
       session.insert(cpu);
     for (GPU gpu : gpus)
@@ -116,11 +121,13 @@ public class SurveyService {
       session.insert(motherboard);
     for (PowerSupply powerSupply : powerSupplies)
       session.insert(powerSupply);
+    session.getAgenda().getAgendaGroup("computer-programs").setFocus();
+    session.fireAllRules();
     session.getAgenda().getAgendaGroup("cpu-gpu-ram").setFocus();
     session.fireAllRules();
     session.getAgenda().getAgendaGroup("finish").setFocus();
     session.fireAllRules();
-
+    session.dispose();
     ObjectFilter pcBuildFilter = new ObjectFilter() {
 
       @Override
@@ -135,7 +142,6 @@ public class SurveyService {
     List<PCBuild> objects = session.getObjects(pcBuildFilter).stream().map((obj) -> (PCBuild) obj)
         .collect(Collectors.toList());
 
-    session.dispose();
     return objects;
   }
 }

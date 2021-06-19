@@ -12,6 +12,7 @@ import com.pcadvisor.pcadvisorapi.dto.PriorityDTO;
 template "computer-program-rules"
 
 rule "Computer Program @{id}"
+agenda-group "computer-programs"
 lock-on-active true
 when
     $computerProgram: ComputerProgramRequestDTO(id == @{id})
