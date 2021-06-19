@@ -32,10 +32,13 @@ import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Transactional
+@Rollback(true)
 public class PCBuildRulesUnitTests {
     @Autowired
     private KieContainer kieContainer;
@@ -61,12 +64,11 @@ public class PCBuildRulesUnitTests {
     private KieSession session;
 
     @Test
-    @Transactional
     public void testGetBuilds() {
         KieSession session = kieContainer.newKieSession("rulesSession");
 
-        PriorityDTO priorityDTO = new PriorityDTO(5, 5, 9);
-        AffinitiesDTO affinitiesDTO = new AffinitiesDTO(null, null, 1050);
+        PriorityDTO priorityDTO = new PriorityDTO(10, 10, 10);
+        AffinitiesDTO affinitiesDTO = new AffinitiesDTO(null, null, null);
         List<CPU> cpus = cpuRepository.findAll();
         List<GPU> gpus = gpuRepository.findAll();
         List<RAM> rams = ramRepository.findAll();
@@ -112,7 +114,6 @@ public class PCBuildRulesUnitTests {
     }
 
     @Test
-    @Transactional
     public void testGetBuildsBrandPref() {
         KieSession session = kieContainer.newKieSession("rulesSession");
 
@@ -163,7 +164,6 @@ public class PCBuildRulesUnitTests {
     }
 
     @Test
-    @Transactional
     public void testNotEnoughBudget() {
         KieSession session = kieContainer.newKieSession("rulesSession");
 
@@ -216,7 +216,6 @@ public class PCBuildRulesUnitTests {
     }
 
     @Test
-    @Transactional
     public void testPSUChoose() {
         session = kieContainer.newKieSession("rulesSession");
         CPU cpu = cpuRepository.findById(1L).orElseGet(null);
@@ -234,7 +233,6 @@ public class PCBuildRulesUnitTests {
     }
 
     @Test
-    @Transactional
     public void testRAMChooseAMD() {
         session = kieContainer.newKieSession("rulesSession");
         CPU cpu = cpuRepository.findById(1L).orElseGet(null);
@@ -255,7 +253,6 @@ public class PCBuildRulesUnitTests {
     }
 
     @Test
-    @Transactional
     public void testRAMChooseINTEL() {
         session = kieContainer.newKieSession("rulesSession");
         CPU cpu = cpuRepository.findById(2L).orElseGet(null);
@@ -276,7 +273,6 @@ public class PCBuildRulesUnitTests {
     }
 
     @Test
-    @Transactional
     public void testStorageChooseNoParams() {
         session = kieContainer.newKieSession("rulesSession");
         CPU cpu = cpuRepository.findById(2L).orElseGet(null);
@@ -295,7 +291,6 @@ public class PCBuildRulesUnitTests {
     }
 
     @Test
-    @Transactional
     public void testStorageChooseSSD() {
         session = kieContainer.newKieSession("rulesSession");
         CPU cpu = cpuRepository.findById(2L).orElseGet(null);
@@ -316,7 +311,6 @@ public class PCBuildRulesUnitTests {
     }
 
     @Test
-    @Transactional
     public void testStorageChooseSSDandHDD() {
         session = kieContainer.newKieSession("rulesSession");
         CPU cpu = cpuRepository.findById(2L).orElseGet(null);
